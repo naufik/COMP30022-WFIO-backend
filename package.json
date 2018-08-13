@@ -1,0 +1,24 @@
+{
+  "name": "wfio-backend",
+  "version": "1.0.0",
+  "description": "Backend for We'll Figure It Out, IT Project.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/COMP30022-18/wfio_backend.git"
+  },
+  "author": "naufik, syudanardi, Chill_X, fdarma, staticDDQ",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/COMP30022-18/wfio_backend/issues"
+  },
+  "homepage": "https://github.com/COMP30022-18/wfio_backend#readme",
+  "dependencies": {
+    "@types/sequelize": "^4.27.24",
+    "sequelize": "^4.38.0",
+    "typescript": "^3.0.1"
+  }
+}
