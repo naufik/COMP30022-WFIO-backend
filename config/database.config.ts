@@ -1,10 +1,11 @@
 import * as Sequelize from 'sequelize';
+import Credentials from '../.serverconfig/database';
 
 const connection = new Sequelize(
-  "insert database url here",
-  "the username here",
-  "the password here",
-  {},
+  Credentials.url,
+  Credentials.username,
+  Credentials.password,
+  {}, // sequelize options
 );
 
 export default connection;
