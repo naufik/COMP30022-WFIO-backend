@@ -5,7 +5,7 @@ import Database from "../config/database.config";
 //not too sure about the expiry, could use DATETIME could use BOOLEAN
 const TwoFactorCode = Database.define("twofactorcode", {
   code: Sequelize.STRING,
-  expiry: Sequelize.DATETIME,
+  expiry: Sequelize.DATE,
 });
 
 TwoFactorCode.belongsTo(Elder);
