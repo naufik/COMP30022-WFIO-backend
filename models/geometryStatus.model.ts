@@ -5,7 +5,7 @@ const GeometryStatus = Database.define("geometrystatus", {
   arrowDirection: Sequelize.STRING,
   startingLocation: Sequelize.GEOMETRY,
   destinationLocation: Sequelize.GEOMETRY,
-  expired: Sequelize.DATETIME,
+  expired: Sequelize.DATE,
 });
 
 export default GeometryStatus;
