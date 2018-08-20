@@ -18,6 +18,7 @@
   "homepage": "https://github.com/COMP30022-18/wfio_backend#readme",
   "dependencies": {
     "@types/sequelize": "^4.27.24",
+    "express": "^4.16.3",
     "sequelize": "^4.38.0",
     "typescript": "^3.0.1"
   }
