@@ -6,7 +6,7 @@ const GeometryStatus = Database.define("geometrystatus", {
   arrowDirection: Sequelize.STRING,
   startingLocation: Sequelize.GEOMETRY,
   destinationLocation: Sequelize.GEOMETRY,
-  expired: Sequelize.DATE,
+  expired: Sequelize.DATE
 });
 
 GeometryStatus.belongsTo(Elder);

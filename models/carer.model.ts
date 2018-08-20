@@ -4,7 +4,7 @@ import Database from "../config/database.config";
 const Carer = Database.define("carer", {
   email: Sequelize.STRING,
   password: Sequelize.STRING,
-  fullName: Sequelize.STRING,
+  fullName: Sequelize.STRING
 });
 
 export default Carer;

@@ -4,7 +4,7 @@ import Database from "../config/database.config";
 
 const Message = Database.define("message", {
     timestamp: Sequelize.DATE,
-    content: Sequelize.STRING,
+    content: Sequelize.STRING
 });
 
 Message.belongsTo(ElderHasCarer)
