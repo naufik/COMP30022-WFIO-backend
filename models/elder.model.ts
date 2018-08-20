@@ -7,5 +7,5 @@ const Elder = Database.define("elder", {
     fullName: Sequelize.STRING,
     currentLocation: Sequelize.GEOMETRY,
 });
-
+  
 export default Elder;
