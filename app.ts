@@ -10,5 +10,5 @@ app.listen(3000, () => {
 });
 
 app.get('/', (req, res) => {
-    res.send(".");
+    res.send("We'll Figure it Out Server is Running");
 });
