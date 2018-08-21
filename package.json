@@ -4,7 +4,7 @@
   "description": "Backend for We'll Figure It Out, IT Project.",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node app", 
+    "start": "ts-node app",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,9 +18,11 @@
   },
   "homepage": "https://github.com/COMP30022-18/wfio_backend#readme",
   "dependencies": {
+    "@types/bluebird": "^3.5.23",
     "@types/body-parser": "^1.17.0",
     "@types/express": "^4.16.0",
     "@types/sequelize": "^4.27.24",
+    "bluebird": "^3.5.1",
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
     "sequelize": "^4.38.0",
