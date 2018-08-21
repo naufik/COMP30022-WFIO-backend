@@ -2,7 +2,7 @@ import * as Express from 'express';
 
 const app: Express.Application = Express();
 
-app.listen(3000, () => {
+app.listen(80, () => {
     console.log("TEAM WE'LL FIGURE IT OUT");
     console.log("APPLICATION BACKEND");
     console.log("########################");
