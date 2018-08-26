@@ -21,7 +21,7 @@ export interface CarerData {
     listElders: User[],
 }
 
-export interface NewUserData {
+export interface NewUser {
     id?: string | number,
     username: string,
     email: string
