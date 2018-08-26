@@ -1,3 +1,5 @@
+import { User } from './user.interface';
+
 /** 
  * This interface defines an action, that is, the action of a user...
  * The identity field is used to store the authentication token as we speak... this token will
@@ -18,3 +20,7 @@ export interface Action {
 /**
  * Interfaces for specific action.
  */
+export interface Token {
+    token: string,
+    user?: User,
+}
