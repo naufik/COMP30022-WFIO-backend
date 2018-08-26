@@ -13,8 +13,14 @@ export default class AuthController {
             .digest().toString();
     }
 
+    public static generateToken(userId: string): Bluebird<string> {
+        return Bluebird.reject(new Error("0000: Not yet implemented."));
+    }
     
-    
+    public static authenticate(tokenId): Bluebird<{ verified: boolean, token: Token }> {
+        return Bluebird.reject(new Error("0000: Not yet implemented."));
+    }
+
     public static login(user: {username: string, password: string, accountType: string}): Bluebird<Token>{
         if (user.accountType == "ELDER") {
             return Elder.findOne({
