@@ -65,7 +65,7 @@ export default class AuthController {
                     username: user.username,
                     password: AuthController.passHash(user.password),
                 }
-            }).then((user) => {
+            }).then((user: any) => {
                 
                 if (user == null) {
                     // this means that the user failed to authenticate, either
@@ -73,8 +73,13 @@ export default class AuthController {
                     return Bluebird.reject(new Error("5010: Login failure."))
                 }
 
-                return Bluebird.resolve({
-                    token: "REPLACE THIS!" //REPLACE THIS
+                return AuthController.generateToken({
+                    id: user.id,
+                    kind: "ELDER",
+                }).then((tokenString) => {
+                    return {
+                        token: tokenString
+                    };
                 });
             });
         } else if (user.accountType == "CARER") {
@@ -83,7 +88,7 @@ export default class AuthController {
                     username: user.username,
                     password: AuthController.passHash(user.password),
                 }
-            }).then((user) => {
+            }).then((user: any) => {
                 
                 if (user == null) {
                     // this means that the user failed to authenticate, either
@@ -91,8 +96,13 @@ export default class AuthController {
                     return Bluebird.reject(new Error("5010: Login failure."))
                 }
 
-                return Bluebird.resolve({
-                    token: "REPLACE THIS!" //REPLACE THIS
+                return AuthController.generateToken({
+                    id: user.id,
+                    kind: "CARER",
+                }).then((tokenString) => {
+                    return {
+                        token: tokenString
+                    };
                 });
             });
         } else {
