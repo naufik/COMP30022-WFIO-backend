@@ -28,4 +28,24 @@ export default class UserController {
     public static updateUser(user: User): Bluebird<any> {
         return Bluebird.reject(new Error("0000: Not implemented."));
     }
+
+    /**
+     * Need to add Methods that *READ* data here.
+     */
+
+    public static getElderData(id: string | number): Bluebird<User> {
+       return Bluebird.reject(new Error("0000: Not implemented."));
+    }
+
+    public static getCarerData(id: string | number): Bluebird<User> {
+        return Bluebird.reject(new Error("0000: Not implemented."));
+    }
+
+    /**
+     * Methods to link a carer and an elder.
+     */
+
+    public static linkUsers(id: {elder: string | number, carer: string | number}) {
+        return Bluebird.reject(new Error("0000: Not implemented."));
+    }
 }
