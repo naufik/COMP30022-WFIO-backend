@@ -14,6 +14,7 @@ export interface User {
 export interface ElderData {
     fullName: string,
     listCarers: User[],
+    favorites: any[],
 }
 
 export interface CarerData {
