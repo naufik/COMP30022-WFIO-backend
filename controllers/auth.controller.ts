@@ -4,17 +4,54 @@ import * as Bluebird from 'bluebird';
 import AuthConfig from '../.serverconfig/auth';
 import Carer from '../models/carer.model';
 import Elder from '../models/elder.model';
+import ElderToken from '../models/elderToken.model';
+import CarerToken from '../models/carerToken.model';
 import { Token } from '../interfaces/action.interface';
 
 export default class AuthController {
     public static passHash(pass: string): string {
         return Crypto.createHash("sha1")
             .update(AuthConfig.preSalt(pass) + pass + AuthConfig.postSalt(pass))
-            .digest().toString();
+            .digest("hex").toString();
     }
 
-    public static generateToken(userId: string): Bluebird<string> {
-        return Bluebird.reject(new Error("0000: Not yet implemented."));
+    private static generateToken(user: {id: string, kind: "ELDER" | "CARER"}): Bluebird<string> {
+        const dH = Crypto.createDiffieHellman(60);
+        dH.generateKeys("base64");
+        const publicKey = dH.getPublicKey("hex");
+        const privateKey = dH.getPrivateKey("hex");
+        
+        let tokenPromise: Bluebird<any> = Bluebird.reject("6001: Invalid account type");
+        // store public to database...
+        if (user.kind == "ELDER") {
+            tokenPromise = ElderToken.findOrCreate({
+                where: {
+                    elderId: user.id
+                }
+            }).then((token: any) => {
+                token.token = publicKey;
+                return Elder.findById(user.id).then((user: any) => {
+                    token.setElder(user);
+                    return token.save();
+                });
+            });
+        } else if (user.kind == "CARER") {
+            tokenPromise = CarerToken.findOrCreate({
+                where: {
+                    carerId: user.id
+                }
+            }).then((token: any) => {
+                token.token = publicKey;
+                return Carer.findById(user.id).then((user: any) => {
+                    token.setCarer(user);
+                    return token.save();
+                });
+            });
+        }
+
+        return tokenPromise.then((tokenObj) => {
+            return privateKey;
+        });
     }
     
     public static authenticate(tokenId): Bluebird<{ verified: boolean, token: Token }> {
