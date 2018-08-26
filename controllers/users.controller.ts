@@ -2,6 +2,7 @@ import * as Bluebird from 'bluebird';
 
 import Carer from '../models/carer.model';
 import Elder from '../models/elder.model';
+import Favorites from '../models/favorites.model';
 import AuthController from './auth.controller';
 import { NewUser, User } from '../interfaces/user.interface';
 
