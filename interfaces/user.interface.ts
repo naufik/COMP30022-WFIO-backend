@@ -5,6 +5,7 @@
 export interface User {
     id: string | number,
     username?: string,
+    email?: string,
     password?: string,
     accountType?: "ELDER" | "CARER",
     content?: ElderData | CarerData, 
@@ -17,5 +18,14 @@ export interface ElderData {
 
 export interface CarerData {
     fullName: string,
-    listElders: User[]
+    listElders: User[],
+}
+
+export interface NewUserData {
+    id?: string | number,
+    username: string,
+    email: string
+    fullName: string,
+    password: string,
+    accountType: "ELDER" | "CARER",
 }
