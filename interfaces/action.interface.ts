@@ -11,10 +11,10 @@ import { User } from './user.interface';
  * For actions that do not require a parameter, attach an empty object {}. Interfaces for 
  * specific actions are down below.
  */
-export interface Action {
+export interface Action<T> {
     identity?: string,                         // this is used to store the token for authentication.
     action: string,                            // the action that needs to be performed.
-    params: any,                               // parameters for the action. an object.
+    params: T,                               // parameters for the action. an object.
 }
 
 /**
