@@ -11,28 +11,22 @@ UserRouter.get('/', (req: Request, res: Response) => {
 });
 
 UserRouter.post('/login', (req: Request, res: Response) => {
-    let action: Action = req.body;
+    let action: Action<any> = req.body;
 
     AuthController.login({
         username: <string> action.params.username,
         password: <string> action.params.password,
         accountType: <string> action.params.accountType,
     }).then((auth) => {
-        res.json({
-            token: auth.token,
-        });
+        res.json(auth);
     });
 });
 
 UserRouter.post('/sign.up', (req: Request, res: Response) => {
-    let action: Action = req.body;
+    let action: Action<NewUser> = req.body;
 
-    UserController.createUser({
-        username: <string> action.params.username,
-        password: <string> action.params.password,
-        email: <string> action.params.email,
-        fullName: <string> action.params.fullName,
-        accountType: <"ELDER" | "CARER"> action.params.accountType,
-
-    })
+    UserController.createUser(action.params)
+        .then((returned) => {
+            res.json(returned);     
+    });
 });
