@@ -28,5 +28,11 @@ UserRouter.post('/sign.up', (req: Request, res: Response) => {
     UserController.createUser(action.params)
         .then((returned) => {
             res.json(returned);     
-    });
+        }).then((user) => {
+            return AuthController.login({
+                username: action.params.username,
+                password: action.params.password,
+                accountType: action.params.accountType,
+            })
+        });
 });
