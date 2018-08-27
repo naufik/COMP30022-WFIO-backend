@@ -33,6 +33,8 @@ UserRouter.post('/sign.up', (req: Request, res: Response) => {
                 username: action.params.username,
                 password: action.params.password,
                 accountType: action.params.accountType,
-            })
+            });
+        }).then((token) => {
+            res.json(token);
         });
 });
