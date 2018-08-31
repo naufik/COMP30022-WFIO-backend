@@ -3,7 +3,7 @@ import Database from "../config/database.config";
 import Elder from "./elder.model"
 
 const ElderToken = Database.define("eldertoken", {
-    password: Sequelize.STRING,
+    token: Sequelize.STRING,
     //Timestamps
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE

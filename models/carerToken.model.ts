@@ -3,7 +3,7 @@ import Database from "../config/database.config";
 import Carer from "./carer.model"
 
 const CarerToken = Database.define("carertoken", {
-    password: Sequelize.STRING,
+    token: Sequelize.STRING,
     //Timestamps
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE
