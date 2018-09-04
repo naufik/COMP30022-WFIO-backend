@@ -1,6 +1,9 @@
 import * as Express from 'express';
+import * as CORS from 'cors';
 
 const app: Express.Application = Express();
+
+app.use(CORS);
 
 app.listen(80, () => {
     console.log("TEAM WE'LL FIGURE IT OUT");
@@ -10,5 +13,10 @@ app.listen(80, () => {
 });
 
 app.get('/', (req, res) => {
-    res.send("We'll Figure it Out Server is Running");
+    res.json({
+        server: "wfio",
+        time: Date(),
+        online: true,
+        message: "Example response message",
+    })
 });

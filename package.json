@@ -24,8 +24,12 @@
     "@types/sequelize": "^4.27.24",
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
     "express": "^4.16.3",
     "sequelize": "^4.38.0",
     "typescript": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.4"
   }
 }
