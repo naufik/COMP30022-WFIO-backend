@@ -20,10 +20,10 @@ UserRouter.post('/', (req: Request, res: Response) => {
     let actionReceipt: Bluebird<Receipt<any>>;
 
     switch (actionRequest.action) {
-        case "sign.up":
+        case "user.signup":
             actionReceipt = RouterFunctions.signUp(actionRequest.params);
             break;
-        case "login":
+        case "user.login":
             actionReceipt = RouterFunctions.login(actionRequest.params);
             break;
         default:
