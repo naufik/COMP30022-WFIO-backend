@@ -17,7 +17,7 @@ UserRouter.get('/', (req: Request, res: Response) => {
 
 UserRouter.post('/', (req: Request, res: Response) => {
     let actionRequest: Action<any> = req.body;
-    let actionReceipt: Bluebird<Receipt<any>>;
+    let actionReceipt: Bluebird<Receipt<any>> = Bluebird.reject(new Error("Invalid Action"));
 
     switch (actionRequest.action) {
         case "user.signup":
@@ -28,24 +28,20 @@ UserRouter.post('/', (req: Request, res: Response) => {
             break;
         default:
             break;
+    }
 
     actionReceipt.then((value) => {
         res.json(value);
-    });
-}
-    
-    return new Bluebird((resolve, reject) => {
-        resolve({
-           ok: true,
-           result: {
-               token: "This is the example returned token"
-           }
-        });
+    }).catch((err: Error) => {
+        let rec: Receipt<any> = {
+            ok: false,
+            result: err,
+        }
     });
 });
 
-RouterFunctions.signUp = (req, res) => {
-    let action: Action<any> = req.body;
+RouterFunctions.signUp = (signUpParams: any): Bluebird<Receipt<Token>> => {
+    let params: NewUser = signUpParams;
 
     // AuthController.login({
     //     username: <string> action.params.username,
@@ -55,11 +51,17 @@ RouterFunctions.signUp = (req, res) => {
     //     res.json(auth);
     // });
 
-
+    return new Bluebird((resolve, reject) => {
+        resolve({
+           ok: true,
+           result: {
+               token: "This is the example returned token"
+           }
+        });
+    });
 };
 
-RouterFunctions.login = (req: Request, res: Response): Bluebird<Receipt<Token>> => {
-    let action: Action<NewUser> = req.body;
+RouterFunctions.login = (loginParams: any): Bluebird<Receipt<Token>> => {
 
     // UserController.createUser(action.params)
     //     .then((returned) => {
