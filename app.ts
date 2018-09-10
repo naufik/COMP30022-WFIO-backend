@@ -3,7 +3,7 @@ import * as CORS from 'cors';
 
 const app: Express.Application = Express();
 
-app.use(CORS);
+app.use(CORS());
 
 app.listen(80, () => {
     console.log("TEAM WE'LL FIGURE IT OUT");
