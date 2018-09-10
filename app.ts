@@ -13,10 +13,11 @@ app.listen(80, () => {
 });
 
 app.get('/', (req, res) => {
+    console.log("received new request");
     res.json({
         server: "wfio",
         time: Date(),
         online: true,
         message: "Example response message",
-    })
+    });
 });
