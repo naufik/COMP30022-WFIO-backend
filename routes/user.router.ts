@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import AuthController from '../controllers/auth.controller';
 import UserController from '../controllers/users.controller'
 import { Action, Receipt, Token } from '../interfaces/action.interface';
-import { NewUser } from '../interfaces/user.interface';
+import { NewUser, Credentials } from '../interfaces/user.interface';
 import * as Bluebird from 'bluebird';
 
 const UserRouter: Router = Router();
@@ -41,49 +41,34 @@ UserRouter.post('/', (req: Request, res: Response) => {
     });
 });
 
-RouterFunctions.signUp = (signUpParams: any): Bluebird<Receipt<Token>> => {
-    let params: NewUser = signUpParams;
-
-    // AuthController.login({
-    //     username: <string> action.params.username,
-    //     password: <string> action.params.password,
-    //     accountType: <string> action.params.accountType,
-    // }).then((auth) => {
-    //     res.json(auth);
-    // });
-
-    return new Bluebird((resolve, reject) => {
-        resolve({
-           ok: true,
-           result: {
-               token: "This is the example returned token"
-           }
+RouterFunctions.signUp = (userDetails: NewUser): Bluebird<Receipt<Token>> => {
+    
+    return UserController.createUser(userDetails)
+    .then((user: any) => {
+        return AuthController.login({
+            username: userDetails.username,
+            password: userDetails.password,
+            accountType: userDetails.accountType,
         });
+    }).then((userToken: Token) => {
+        return {
+            ok: true,
+            result: userToken,
+        }
     });
+
 };
 
-RouterFunctions.login = (loginParams: any): Bluebird<Receipt<Token>> => {
-
-    // UserController.createUser(action.params)
-    //     .then((returned) => {
-    //         res.json(returned);     
-    //     }).then((user) => {
-    //         return AuthController.login({
-    //             username: action.params.username,
-    //             password: action.params.password,
-    //             accountType: action.params.accountType,
-    //         });
-    //     }).then((token) => {
-    //         res.json(token);
-    //     });
-
-    return new Bluebird((resolve, reject) => {
-        resolve({
-           ok: true,
-           result: {
-               token: "This is the example returned token"
-           }
-        });
+RouterFunctions.login = (loginParams: Credentials): Bluebird<Receipt<Token>> => {
+    return AuthController.login({
+        username: loginParams.username,
+        password: loginParams.password,
+        accountType: "ELDER",
+    }).then((userToken: Token) => {
+        return {
+            ok: true,
+            result: userToken,
+        }
     });
 };
 
