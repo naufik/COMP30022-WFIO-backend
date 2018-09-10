@@ -8,21 +8,30 @@ import { NewUser, User } from '../interfaces/user.interface';
 
 export default class UserController {
     public static createUser(user: NewUser): Bluebird<any> {
+        let returnedPromise: Bluebird<any>;
+
         if (user.accountType == "CARER") {
-            return Carer.create({
+            returnedPromise = Carer.create({
                 email: user.email,
                 password: AuthController.passHash(user.password),
                 fullName: user.fullName, 
             });
         } else if (user.accountType == "ELDER") {
-            return Elder.create({
+            returnedPromise = Elder.create({
                 email: user.email,
                 password: AuthController.passHash(user.password),
                 fullName: user.fullName,
             });
         } else {
-           return Bluebird.reject(new Error("6001: Invalid account type given."));
+           returnedPromise = Bluebird.reject(new Error("6001: Invalid account type given."));
         }
+
+        return returnedPromise.then((user: NewUser) => {
+            return {
+                fullName: user.fullName,
+                email: user.email,
+            }
+        });
     }
 
     public static updateUser(user: User): Bluebird<any> {
