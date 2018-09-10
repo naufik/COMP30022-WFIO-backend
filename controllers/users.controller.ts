@@ -14,13 +14,15 @@ export default class UserController {
             returnedPromise = Carer.create({
                 email: user.email,
                 password: AuthController.passHash(user.password),
-                fullName: user.fullName, 
+                fullname: user.fullName,
+                username: user.username, 
             });
         } else if (user.accountType == "ELDER") {
             returnedPromise = Elder.create({
                 email: user.email,
                 password: AuthController.passHash(user.password),
-                fullName: user.fullName,
+                fullname: user.fullName,
+                username: user.username,
             });
         } else {
            returnedPromise = Bluebird.reject(new Error("6001: Invalid account type given."));
@@ -28,7 +30,7 @@ export default class UserController {
 
         return returnedPromise.then((user: NewUser) => {
             return {
-                fullName: user.fullName,
+                fullname: user.fullName,
                 email: user.email,
             }
         });
