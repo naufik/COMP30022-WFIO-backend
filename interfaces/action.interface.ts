@@ -12,15 +12,19 @@ import { User } from './user.interface';
  * specific actions are down below.
  */
 export interface Action<T> {
-    identity?: string,                         // this is used to store the token for authentication.
-    action: string,                            // the action that needs to be performed.
-    params: T,                               // parameters for the action. an object.
+    identity?: string,                      // this is used to store the token for authentication.
+    action: string,                         // the action that needs to be performed.
+    params: T,                              // parameters for the action. an object.
 }
 
+export interface Receipt<V> {
+    ok: boolean,                            // Whether the request was successfully carried out or not.
+    result?: V | Error,                     // The result of the carried out request.
+}
 /**
  * Interfaces for specific action.
  */
 export interface Token {
-    token: string,
-    user?: User,
+    token: string,                          // The token private key that is to be generated.
+    user?: User,                            // This token represents the user object that is tied to the token.
 }
