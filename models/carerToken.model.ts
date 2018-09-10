@@ -3,10 +3,13 @@ import Database from "../config/database.config";
 import Carer from "./carer.model"
 
 const CarerToken = Database.define("carertoken", {
-    token: Sequelize.STRING,
-    //Timestamps
-    createdAt: Sequelize.DATE,
-    updatedAt: Sequelize.DATE
+    token: {
+        type: Sequelize.STRING,
+        unique: true,
+    },
+    lastUpdate: {
+        type: Sequelize.DATE,
+    }
 
 });
 

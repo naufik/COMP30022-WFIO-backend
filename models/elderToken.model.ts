@@ -3,11 +3,14 @@ import Database from "../config/database.config";
 import Elder from "./elder.model"
 
 const ElderToken = Database.define("eldertoken", {
-    token: Sequelize.STRING,
-    //Timestamps
-    createdAt: Sequelize.DATE,
-    updatedAt: Sequelize.DATE
+    token: {
+        type: Sequelize.STRING,
+        unique: true,
+    },
+    lastUpdate: {
+        type: Sequelize.DATE,
+    }
 });
 
-EldeToken.belongsTo(Elder);
+ElderToken.belongsTo(Elder);
 export default ElderToken;
