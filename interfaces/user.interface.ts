@@ -11,6 +11,11 @@ export interface User {
     content?: ElderData | CarerData, 
 }
 
+export interface Credentials {
+    username: string,
+    password: string,
+}
+
 export interface ElderData {
     fullName: string,
     listCarers: User[],
