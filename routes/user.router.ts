@@ -8,7 +8,10 @@ const UserRouter: Router = Router();
 const RouterFunctions: any = {}
 
 UserRouter.get('/', (req: Request, res: Response) => {
-    res.send("Endpoint for Users works!");
+    res.json({
+        endpoint: "users",
+        online: true,
+    });
 });
 
 UserRouter.post('/', (req: Request, res: Response) => {
