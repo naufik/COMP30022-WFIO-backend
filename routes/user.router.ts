@@ -17,7 +17,7 @@ UserRouter.get('/', (req: Request, res: Response) => {
 
 UserRouter.post('/', (req: Request, res: Response) => {
     let actionRequest: Action<any> = req.body;
-    let actionReceipt: Bluebird<Receipt<any>> = Bluebird.reject(new Error("Invalid Action"));
+    let actionReceipt: Bluebird<Receipt<any>>;
 
     console.log("New request received: " + actionRequest.action);
     switch (actionRequest.action) {
@@ -28,6 +28,7 @@ UserRouter.post('/', (req: Request, res: Response) => {
             actionReceipt = RouterFunctions.login(actionRequest.params);
             break;
         default:
+            actionReceipt = Bluebird.reject(new Error("Invalid Action"));
             break;
     }
 
