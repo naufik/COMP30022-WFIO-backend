@@ -10,7 +10,6 @@ const CarerToken = Database.define("carertoken", {
     lastUpdate: {
         type: Sequelize.DATE,
     }
-
 });
 
 CarerToken.belongsTo(Carer);
