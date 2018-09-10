@@ -48,7 +48,6 @@ RouterFunctions.signUp = (userDetails: NewUser): Bluebird<Receipt<Token>> => {
         return AuthController.login({
             username: userDetails.username,
             password: userDetails.password,
-            accountType: userDetails.accountType,
         });
     }).then((userToken: Token) => {
         return {
@@ -63,7 +62,6 @@ RouterFunctions.login = (loginParams: Credentials): Bluebird<Receipt<Token>> => 
     return AuthController.login({
         username: loginParams.username,
         password: loginParams.password,
-        accountType: "ELDER",
     }).then((userToken: Token) => {
         return {
             ok: true,
