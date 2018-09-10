@@ -16,7 +16,7 @@ UserRouter.get('/', (req: Request, res: Response) => {
 });
 
 UserRouter.post('/', (req: Request, res: Response) => {
-    let actionRequest: Action<any> = <Action<any>>req.body;
+    let actionRequest: Action<any> = req.body;
     let actionReceipt: Bluebird<Receipt<any>>;
 
     switch (actionRequest.action) {
