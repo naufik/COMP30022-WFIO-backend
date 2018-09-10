@@ -15,37 +15,54 @@ UserRouter.post('/', (req: Request, res: Response) => {
     let request = <Action<any>>req.body;
 
     switch (request.action) {
-
+        case "sign.up":
+            RouterFunctions.signUp(req, res);
+            break;
+        case "login":
+            RouterFunctions.login(req,res);
+            break;
+        default:
+            res.json({error: "konak"});
     }
 });
 
-RouterFunctions.SignUp = (req, res) => {
+RouterFunctions.signUp = (req, res) => {
     let action: Action<any> = req.body;
 
-    AuthController.login({
-        username: <string> action.params.username,
-        password: <string> action.params.password,
-        accountType: <string> action.params.accountType,
-    }).then((auth) => {
-        res.json(auth);
+    // AuthController.login({
+    //     username: <string> action.params.username,
+    //     password: <string> action.params.password,
+    //     accountType: <string> action.params.accountType,
+    // }).then((auth) => {
+    //     res.json(auth);
+    // });
+
+    res.json({
+        success: false,
+        user: action.params,
     });
 };
 
-RouterFunctions.SignUp = (req: Request, res: Response) => {
+RouterFunctions.login = (req: Request, res: Response) => {
     let action: Action<NewUser> = req.body;
 
-    UserController.createUser(action.params)
-        .then((returned) => {
-            res.json(returned);     
-        }).then((user) => {
-            return AuthController.login({
-                username: action.params.username,
-                password: action.params.password,
-                accountType: action.params.accountType,
-            });
-        }).then((token) => {
-            res.json(token);
-        });
+    // UserController.createUser(action.params)
+    //     .then((returned) => {
+    //         res.json(returned);     
+    //     }).then((user) => {
+    //         return AuthController.login({
+    //             username: action.params.username,
+    //             password: action.params.password,
+    //             accountType: action.params.accountType,
+    //         });
+    //     }).then((token) => {
+    //         res.json(token);
+    //     });
+
+    res.json({
+        success: false,
+        user: action.params,
+    });
 };
 
 export default UserRouter;
