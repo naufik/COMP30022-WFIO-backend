@@ -1,8 +1,9 @@
 import { Router, Request, Response } from 'express';
 import AuthController from '../controllers/auth.controller';
 import UserController from '../controllers/users.controller'
-import { Action } from '../interfaces/action.interface';
+import { Action, Receipt, Token } from '../interfaces/action.interface';
 import { NewUser } from '../interfaces/user.interface';
+import * as Bluebird from 'bluebird';
 
 const UserRouter: Router = Router();
 const RouterFunctions: any = {}
@@ -15,18 +16,28 @@ UserRouter.get('/', (req: Request, res: Response) => {
 });
 
 UserRouter.post('/', (req: Request, res: Response) => {
-    let request = <Action<any>>req.body;
+    let actionRequest: Action<any> = <Action<any>>req.body;
+    let receipt: Bluebird<Receipt<any>>;
 
-    switch (request.action) {
+    switch (actionRequest.action) {
         case "sign.up":
-            RouterFunctions.signUp(req, res);
+            receipt = RouterFunctions.signUp(actionRequest.params);
             break;
         case "login":
-            RouterFunctions.login(req,res);
+            receipt = RouterFunctions.login(actionRequest.params);
             break;
         default:
-            res.json({error: "konak"});
+            break;
     }
+    
+    return new Bluebird((resolve, reject) => {
+        resolve({
+           ok: true,
+           result: {
+               token: "This is the example returned token"
+           }
+        });
+    });
 });
 
 RouterFunctions.signUp = (req, res) => {
@@ -40,13 +51,10 @@ RouterFunctions.signUp = (req, res) => {
     //     res.json(auth);
     // });
 
-    res.json({
-        success: false,
-        user: action.params,
-    });
+
 };
 
-RouterFunctions.login = (req: Request, res: Response) => {
+RouterFunctions.login = (req: Request, res: Response): Bluebird<Receipt<Token>> => {
     let action: Action<NewUser> = req.body;
 
     // UserController.createUser(action.params)
@@ -62,9 +70,13 @@ RouterFunctions.login = (req: Request, res: Response) => {
     //         res.json(token);
     //     });
 
-    res.json({
-        success: false,
-        user: action.params,
+    return new Bluebird((resolve, reject) => {
+        resolve({
+           ok: true,
+           result: {
+               token: "This is the example returned token"
+           }
+        });
     });
 };
 
