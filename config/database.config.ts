@@ -2,10 +2,14 @@ import * as Sequelize from 'sequelize';
 import Credentials from '../.serverconfig/database';
 
 const connection = new Sequelize(
-  Credentials.url,
+  "wfio",
   Credentials.username,
   Credentials.password,
-  {}, // sequelize options
+  {
+    dialect: "postgresql",
+    host: Credentials.url,
+    port: Credentials.port,
+  }, // sequelize options
 );
 
 connection.authenticate().then(() => {
