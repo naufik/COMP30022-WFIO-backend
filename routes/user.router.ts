@@ -20,6 +20,7 @@ UserRouter.post('/', (req: Request, res: Response) => {
     let actionReceipt: Bluebird<Receipt<any>>;
 
     console.log("New request received: " + actionRequest.action);
+    console.log(actionRequest);
     switch (actionRequest.action) {
         case "user.signup":
             actionReceipt = RouterFunctions.signUp(actionRequest.params);
@@ -46,10 +47,13 @@ RouterFunctions.signUp = (userDetails: NewUser): Bluebird<Receipt<Token>> => {
     
     return UserController.createUser(userDetails)
     .then((user: any) => {
-        return AuthController.login({
-            username: userDetails.username,
-            password: userDetails.password,
-        });
+        return {
+            token: "asdasd",
+        };
+        // return AuthController.login({
+        //     username: userDetails.username,
+        //     password: userDetails.password,
+        // });
     }).then((userToken: Token) => {
         return {
             ok: true,
