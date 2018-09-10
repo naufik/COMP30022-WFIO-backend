@@ -17,18 +17,22 @@ UserRouter.get('/', (req: Request, res: Response) => {
 
 UserRouter.post('/', (req: Request, res: Response) => {
     let actionRequest: Action<any> = <Action<any>>req.body;
-    let receipt: Bluebird<Receipt<any>>;
+    let actionReceipt: Bluebird<Receipt<any>>;
 
     switch (actionRequest.action) {
         case "sign.up":
-            receipt = RouterFunctions.signUp(actionRequest.params);
+            actionReceipt = RouterFunctions.signUp(actionRequest.params);
             break;
         case "login":
-            receipt = RouterFunctions.login(actionRequest.params);
+            actionReceipt = RouterFunctions.login(actionRequest.params);
             break;
         default:
             break;
-    }
+
+    actionReceipt.then((value) => {
+        res.json(value);
+    });
+}
     
     return new Bluebird((resolve, reject) => {
         resolve({
