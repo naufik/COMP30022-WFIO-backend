@@ -19,6 +19,8 @@ UserRouter.post('/', (req: Request, res: Response) => {
     let actionRequest: Action<any> = req.body;
     let actionReceipt: Bluebird<Receipt<any>>;
 
+    console.log(actionRequest);
+
     switch (actionRequest.action) {
         case "user.signup":
             actionReceipt = RouterFunctions.signUp(actionRequest.params);
