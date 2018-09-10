@@ -17,7 +17,7 @@ export interface Action<T> {
     params: T,                              // parameters for the action. an object.
 }
 
-export interface Resolvent<V> {
+export interface Receipt<V> {
     ok: boolean,                            // Whether the request was successfully carried out or not.
     result?: V | Error,                     // The result of the carried out request.
 }
