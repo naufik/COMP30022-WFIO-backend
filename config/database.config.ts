@@ -8,4 +8,15 @@ const connection = new Sequelize(
   {}, // sequelize options
 );
 
+connection.authenticate().then(() => {
+  console.log("[[ Database Connected ]]");
+  if (Credentials.testEnvironment) {
+    console.log("[[ On Testbed Environment: Clearing All Databases ]]");
+  }
+
+  connection.sync({
+    force: Credentials.testEnvironment
+  });
+});
+
 export default connection;

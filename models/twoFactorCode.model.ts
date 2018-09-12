@@ -1,15 +1,13 @@
 import * as Sequelize from 'sequelize';
 
-import Carer from "./carer.model";
 import Elder from "./elder.model";
 import Database from "../config/database.config";
 //not too sure about the expiry, could use DATETIME could use BOOLEAN
-const twoFactorCode = Database.define("twofactorcode", {
-  code: Sequelize.STRING,
-  expiry: Sequelize.DATE,
+const TwoFactorCode = Database.define("twofactorcode", {
+  code: Sequelize.INTEGER,
+  expiry: Sequelize.DATE
 });
 
-twoFactorCode.belongsTo(Carer);
-twoFactorCode.belongsTo(Elder);
+TwoFactorCode.belongsTo(Elder);
 
-export default twoFactorCode;
+export default TwoFactorCode;

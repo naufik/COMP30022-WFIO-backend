@@ -1,10 +1,27 @@
 import * as Sequelize from 'sequelize';
 import Database from "../config/database.config";
-//keep table name in lower case (carer)
+
 const Carer = Database.define("carer", {
-  email: Sequelize.STRING,
-  password: Sequelize.STRING,
-  fullName: Sequelize.STRING,
+  email: {
+    type: Sequelize.STRING,
+    unique: true,
+    validate: {
+      isEmail: true
+    }
+  },
+  password: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  username: { 
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true,
+  },
+  fullname: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  }
 });
 
 export default Carer;
