@@ -48,6 +48,9 @@ export default class AuthController {
 					elderId: user.id,
 					token: publicKey,
 				}
+			}).then((token: any) => {
+				console.log(token);
+				return token;
 			});
 		} else if (user.kind=== "CARER") {
 			console.log("Generating CARER token");
@@ -55,6 +58,9 @@ export default class AuthController {
 				where: {
 					carerId: user.id
 				}
+			}).then((token: any) => {
+				console.log(token);
+				return token;
 			});
 		} else {
 			return Bluebird.reject("6001: Invalid account type;")
