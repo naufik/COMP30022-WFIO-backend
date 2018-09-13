@@ -28,12 +28,7 @@ export default class UserController {
            returnedPromise = Bluebird.reject(new Error("6001: Invalid account type given."));
         }
 
-        return returnedPromise.then((userEntry: NewUser) => {
-            return AuthController.login({
-                username: userEntry.username,
-                password: user.password,
-            });
-        });
+        return returnedPromise;
     }
 
     public static updateUser(user: User): Bluebird<any> {

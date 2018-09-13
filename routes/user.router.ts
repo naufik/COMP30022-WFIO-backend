@@ -45,22 +45,17 @@ UserRouter.post('/', (req: Request, res: Response) => {
 
 RouterFunctions.signUp = (userDetails: NewUser): Bluebird<Receipt<Token>> => {
     
-    return UserController.createUser(userDetails)
-    .then((user: any) => {
-        return {
-            token: "asdasd",
-        };
-        // return AuthController.login({
-        //     username: userDetails.username,
-        //     password: userDetails.password,
-        // });
-    }).then((userToken: Token) => {
-        return {
-            ok: true,
-            result: userToken,
-        }
+    return UserController.createUser(userDetails).then((userEntry: NewUser) => {
+        return AuthController.login({
+            username: userEntry.username,
+            password: userDetails.password,
+        }).then((token) => {
+            return {
+                ok: true,
+                result: token,
+            }
+        });
     });
-
 };
 
 RouterFunctions.login = (loginParams: Credentials): Bluebird<Receipt<Token>> => {
