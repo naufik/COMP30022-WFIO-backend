@@ -46,7 +46,7 @@ export default class AuthController {
 				defaults: {
 					token: publicKey,
 				}
-			});
+			})
 		} else if (user.kind === "CARER") {
 			tokenPromise = CarerToken.findOrCreate({
 				where: {
@@ -105,7 +105,7 @@ export default class AuthController {
 			const userFound = (elderFound != null) ? elderFound : carerFound;
 
 			return AuthController.generateToken({
-				id: userFound,
+				id: userFound.id,
 				kind: (elderFound != null) ? "ELDER" : "CARER",
 			}).then((tokenString: string): Token => {
 				return {
