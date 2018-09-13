@@ -99,7 +99,7 @@ export default class AuthController {
 				password: AuthController.passHash(user.password),
 			}
 		})]).spread((elderFound: any, carerFound: any) => {
-
+			console.log("control reached");
 			if (elderFound == null && carerFound == null) {
 				return Bluebird.reject("Error 5000: Cannot Find Account");
 			}
