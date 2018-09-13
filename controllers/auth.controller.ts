@@ -42,19 +42,19 @@ export default class AuthController {
 			tokenPromise = ElderToken.findOrCreate({
 				where: {
 					elderId: user.id,
+				},
+				defaults: {
+					token: publicKey,
 				}
-			}).spread((token: any, created: true) => {
-				token.token = publicKey;
-				return token.save();
 			});
 		} else if (user.kind === "CARER") {
 			tokenPromise = CarerToken.findOrCreate({
 				where: {
 					carerId: user.id
+				},
+				defaults: {
+					token: publicKey,
 				}
-			}).spread((token: any, created: true) => {
-				token.token = publicKey;
-				return token.save();
 			});
 		} else {
 			return Bluebird.reject("6001: Invalid account type;")
