@@ -104,12 +104,12 @@ export default class AuthController {
 			}
 		})]).spread((elderFound: any, carerFound: any) => {
 
-			if (elderFound == null && carerFound == null) {
+			if (elderFound === null && carerFound === null) {
 				return Bluebird.reject("Error 5000: Cannot Find Account");
 			}
 			
 			return AuthController.generateToken({
-				id: elderFound.id,
+				id: (elderFound != null) ? elderFound.id : carerFound.id,
 				kind: (elderFound != null) ? "ELDER" : "CARER",
 			}).then((tokenString: string): Token => {
 				return {
