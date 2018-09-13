@@ -51,8 +51,8 @@ UserRouter.post('/', (req: Request, res: Response) => {
     });
 });
 
-RouterFunctions.getLinkCode = (email: string): Bluebird<Receipt<any>> => {
-    return UserController.getUserByEmail(email).then((user: any) => {
+RouterFunctions.getLinkCode = (elderEmail: string): Bluebird<Receipt<any>> => {
+    return UserController.getUserByEmail(elderEmail).then((user: any) => {
         return UserController.requestLink(user.id).then((newCode) => {
             return {
                 ok: true,
@@ -63,7 +63,15 @@ RouterFunctions.getLinkCode = (email: string): Bluebird<Receipt<any>> => {
             };
         });
     })
+}
 
+RouterFunctions.linkElder = (linkCode: string): Bluebird<Receipt<any>> => {
+    return UserController.acceptLink(linkCode).then((returned) => {
+        return {
+            ok: true,
+            result: returned
+        };
+    });
 }
 
 RouterFunctions.signUp = (userDetails: NewUser): Bluebird<Receipt<Token>> => {
