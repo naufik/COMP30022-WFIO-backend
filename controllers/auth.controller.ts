@@ -38,9 +38,9 @@ export default class AuthController {
 
 		console.log(publicKey);
 		console.log(privateKey);
-		let tokenPromise: Bluebird<any> = Bluebird.reject("6001: Invalid account type");
+		let tokenPromise: Bluebird<any>;
 		// store public to database...
-		if (user.kind == "ELDER") {
+		if (user.kind === "ELDER") {
 			tokenPromise = ElderToken.findOrCreate({
 				where: {
 					elderId: user.id,
@@ -48,25 +48,21 @@ export default class AuthController {
 				}
 			}).then((token: any) => {
 				token.token = publicKey;
-				return Elder.findById(user.id).then((user: any) => {
-					token.setElder(user);
-					return token.save();
-				});
+				return token.save();
 			});
-		} else if (user.kind == "CARER") {
+		} else if (user.kind === "CARER") {
 			tokenPromise = CarerToken.findOrCreate({
 				where: {
 					carerId: user.id
 				}
 			}).then((token: any) => {
 				token.token = publicKey;
-				return Carer.findById(user.id).then((user: any) => {
-					token.setCarer(user);
-					return token.save();
-				});
+				return token.save();
 			});
+		} else {
+			return Bluebird.reject("6001: Invalid account type;")
 		}
-
+		
 		return tokenPromise.then((tokenObj) => {
 			return privateKey;
 		});
@@ -108,8 +104,10 @@ export default class AuthController {
 				return Bluebird.reject("Error 5000: Cannot Find Account");
 			}
 			
+			const userFound = (elderFound !== null) ? elderFound : carerFound;
+
 			return AuthController.generateToken({
-				id: (elderFound != null) ? elderFound.id : carerFound.id,
+				id: userFound,
 				kind: (elderFound != null) ? "ELDER" : "CARER",
 			}).then((tokenString: string): Token => {
 				return {
