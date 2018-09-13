@@ -79,8 +79,23 @@ export default class UserController {
         });
     }
 
-    public static requestLink() {
-        // CREATE RANDOM NUMBER
+    public static requestLink(elder: string) {
+        let randNum = Math.floor(100000 + Math.random() * 899999);
+
+        let returnedPromise = TwoFactorCode.findOrCreate({
+            where: {
+                code: randNum.toString(),
+            },
+            defaults: {
+                elderId: elder,
+            }
+        }).spread((code: any, created: boolean) => {
+            if (!created) {
+                code.elderId = elder;
+                return code.save();
+            }
+            return code;
+        })
     }
 
     public static acceptLink(linkNumber: string) {
@@ -89,6 +104,9 @@ export default class UserController {
                 code: linkNumber
             }
         }).then((code: any) => {
+            if (code != null) {
+                return Bluebird.reject("Error: Two factor code incorrect.`")
+            }
             return Elder.findById(code.elderId);
         }).then((user: any) => {
             return {
