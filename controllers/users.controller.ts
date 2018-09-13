@@ -84,7 +84,7 @@ export default class UserController {
     }
 
     public static acceptLink(linkNumber: string) {
-        TwoFactorCode.findOne({
+        return TwoFactorCode.findOne({
             where: {
                 code: linkNumber
             }
