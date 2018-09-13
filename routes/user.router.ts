@@ -28,6 +28,14 @@ UserRouter.post('/', (req: Request, res: Response) => {
         case "user.login":
             actionReceipt = RouterFunctions.login(actionRequest.params);
             break;
+        case "user.getlinkcode": 
+            actionReceipt = AuthController.authenticate(req.body.identity.email, req.body.identity.token).then((auth) => {
+                if (auth.verified) {
+                    return RouterFunctions.getLinkCode(req.body.identity.email);
+                } else {
+                    return Bluebird.reject("403: Forbidden Access");
+                }
+            });
         default:
             actionReceipt = Bluebird.reject(new Error("Invalid Action"));
             break;
@@ -43,8 +51,22 @@ UserRouter.post('/', (req: Request, res: Response) => {
     });
 });
 
+RouterFunctions.getLinkCode = (email: string): Bluebird<Receipt<any>> => {
+    return UserController.getUserByEmail(email).then((user: any) => {
+        return UserController.requestLink(user.id).then((newCode) => {
+            return {
+                ok: true,
+                result: {
+                    code: newCode.code,
+                    elderId: user.id
+                }
+            };
+        });
+    })
+
+}
+
 RouterFunctions.signUp = (userDetails: NewUser): Bluebird<Receipt<Token>> => {
-    
     return UserController.createUser(userDetails).then((userEntry: NewUser) => {
         return AuthController.login({
             username: userEntry.username,

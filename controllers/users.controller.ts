@@ -79,7 +79,7 @@ export default class UserController {
         });
     }
 
-    public static requestLink(elder: number) {
+    public static requestLink(elder: number): Bluebird<any> {
         let randNum = Math.floor(100000 + Math.random() * 899999);
 
         let timeIn30Minutes = new Date();
