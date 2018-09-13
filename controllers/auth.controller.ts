@@ -38,9 +38,11 @@ export default class AuthController {
 
 		console.log(publicKey);
 		console.log(privateKey);
+		console.log(user.kind);
 		let tokenPromise: Bluebird<any>;
 		// store public to database...
-		if (user.kind === "ELDER") {
+		if (user.kind == "ELDER") {
+			console.log("Generating ELDER token");
 			tokenPromise = ElderToken.findOrCreate({
 				where: {
 					elderId: user.id,
@@ -50,7 +52,8 @@ export default class AuthController {
 				token.token = publicKey;
 				return token.save();
 			});
-		} else if (user.kind === "CARER") {
+		} else if (user.kind=== "CARER") {
+			console.log("Generating CARER token");
 			tokenPromise = CarerToken.findOrCreate({
 				where: {
 					carerId: user.id
