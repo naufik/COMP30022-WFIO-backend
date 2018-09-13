@@ -36,31 +36,25 @@ export default class AuthController {
 		const publicKey = dH.getPublicKey("hex");
 		const privateKey = dH.getPrivateKey("hex");
 
-		console.log(publicKey);
-		console.log(privateKey);
-		console.log(user.kind);
 		let tokenPromise: Bluebird<any>;
 		// store public to database...
 		if (user.kind == "ELDER") {
-			console.log("Generating ELDER token");
 			tokenPromise = ElderToken.findOrCreate({
 				where: {
 					elderId: user.id,
-					token: publicKey,
 				}
-			}).then((token: any) => {
-				console.log(token);
-				return token;
+			}).spread((token: any, created: true) => {
+				token.token = publicKey;
+				return token.save();
 			});
-		} else if (user.kind=== "CARER") {
-			console.log("Generating CARER token");
+		} else if (user.kind === "CARER") {
 			tokenPromise = CarerToken.findOrCreate({
 				where: {
 					carerId: user.id
 				}
-			}).then((token: any) => {
-				console.log(token);
-				return token;
+			}).spread((token: any, created: true) => {
+				token.token = publicKey;
+				return token.save();
 			});
 		} else {
 			return Bluebird.reject("6001: Invalid account type;")
