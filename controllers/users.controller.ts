@@ -31,6 +31,31 @@ export default class UserController {
         return returnedPromise;
     }
 
+    public static getUserByEmail(email: string): Bluebird<{ user: User, kind: string } | null> {
+        return Bluebird.all([
+            Carer.findOne({
+                where: {
+                    email: email,
+                }
+            }),
+            Elder.findOne({
+                where: {
+                    email: email,
+                }
+            })
+        ]).spread((elderFound: any, carerFound: any) => {
+            if (elderFound == null && carerFound == null) {
+                return null
+            }
+
+            const userFound = (elderFound != null) ? elderFound : carerFound;
+            return {
+                user: userFound,
+                kind: (elderFound != null) ? "ELDER" : "CARER",
+            };
+        })
+    }
+
     public static updateUser(user: User): Bluebird<any> {
         return Bluebird.reject(new Error("0000: Not implemented."));
     }

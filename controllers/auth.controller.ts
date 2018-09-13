@@ -1,13 +1,15 @@
 import * as Crypto from 'crypto';
 import * as Bluebird from 'bluebird';
 
-import AuthConfig from '../.serverconfig/auth';
+import _authconfig from '../.serverconfig/auth';
 import Carer from '../models/carer.model';
 import Elder from '../models/elder.model';
 import ElderToken from '../models/elderToken.model';
 import CarerToken from '../models/carerToken.model';
 import { Token } from '../interfaces/action.interface';
+import { User } from '../interfaces/user.interface';
 import * as SQL from 'sequelize';
+import UserController from './users.controller';
 
 export default class AuthController {
 
@@ -18,7 +20,7 @@ export default class AuthController {
 	 */
 	public static passHash(pass: string): string {
 		return Crypto.createHash("sha1")
-			.update(AuthConfig.preSalt(pass) + pass + AuthConfig.postSalt(pass))
+			.update(_authconfig.preSalt(pass) + pass + _authconfig.postSalt(pass))
 			.digest("hex").toString();
 	}
 
@@ -77,11 +79,58 @@ export default class AuthController {
 	 * @todo FINISH THIS METHOD
 	 * @param tokenId 
 	 */
-	public static authenticate(tokenId): Bluebird<{ verified: boolean, token: Token }> {
+	public static authenticate(userEmail: string, tokenId: string): Bluebird<{ verified: boolean, token: Token }> {
 		// This method should generate a random alphanumeric string, then encrypts it
 		// with the public key. An attempt to decrypt with the private key should then
 		// determine whether they are a key pair or not (if it results in identity).
-		return Bluebird.reject(new Error("0000: Not yet implemented."));
+		const randStr = "O(n^4) algorithms are good enough CHANGE MY MIND";
+
+		const pubK = _authconfig.serverPublic;
+		const prvK = _authconfig.serverPrivate;
+		const serverDH = Crypto.createDiffieHellman(60);
+		
+		serverDH.setPrivateKey(prvK, "hex");
+		serverDH.setPublicKey(pubK, "hex");
+
+		return UserController.getUserByEmail(userEmail)
+			.then((value: {user: any, kind: string}) => {
+				if (value != null) {
+					if (value.kind == "ELDER") {
+						return ElderToken.findOne({
+							where: {
+								elderId: value.user.id
+							}
+						});
+					} else if (value.kind == "CARER") {
+						return CarerToken.findOne({
+							where: {
+								carerId: value.user.id
+							}
+						});
+					}
+				}
+				return Bluebird.reject(new Error("Unknown Error"));
+			}).then((tokenThing:any) => {
+				let verificationDone: boolean = false;
+				if (tokenThing != null) {
+					const userDH = Crypto.createDiffieHellman(60);
+
+					userDH.setPrivateKey(tokenId, "hex");
+					userDH.setPublicKey(tokenThing.token, "hex");
+					
+					let lhs = userDH.computeSecret(serverDH.getPublicKey());
+					let rhs = serverDH.computeSecret(userDH.getPublicKey());
+					verificationDone = lhs == rhs;
+				}
+				return {
+					verified: verificationDone,
+					token: {
+						token: tokenId
+					}
+				}
+			})
+		
+
 	}
 
 
