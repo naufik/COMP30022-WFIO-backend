@@ -79,8 +79,11 @@ export default class UserController {
         });
     }
 
-    public static requestLink(elder: string) {
+    public static requestLink(elder: number) {
         let randNum = Math.floor(100000 + Math.random() * 899999);
+
+        let timeIn30Minutes = new Date();
+        timeIn30Minutes.setMinutes(timeIn30Minutes.getMinutes() + 30);
 
         let returnedPromise = TwoFactorCode.findOrCreate({
             where: {
@@ -95,7 +98,9 @@ export default class UserController {
                 return code.save();
             }
             return code;
-        })
+        });
+
+        return returnedPromise;
     }
 
     public static acceptLink(linkNumber: string) {
