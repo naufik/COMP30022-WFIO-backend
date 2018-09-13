@@ -7,6 +7,7 @@ import Elder from '../models/elder.model';
 import ElderToken from '../models/elderToken.model';
 import CarerToken from '../models/carerToken.model';
 import { Token } from '../interfaces/action.interface';
+import * as SQL from 'sequelize';
 
 export default class AuthController {
 
@@ -38,7 +39,7 @@ export default class AuthController {
 
 		let tokenPromise: Bluebird<any>;
 		// store public to database...
-		if (user.kind == "ELDER") {
+		if (user.kind === "ELDER") {
 			tokenPromise = ElderToken.findOrCreate({
 				where: {
 					elderId: user.id,
@@ -55,12 +56,17 @@ export default class AuthController {
 				defaults: {
 					token: publicKey,
 				}
-			});
+			})
 		} else {
 			return Bluebird.reject("6001: Invalid account type;")
 		}
 		
-		return tokenPromise.then((tokenObj) => {
+		return tokenPromise.spread((tokenObj: any, created: boolean) => {
+			if (!created) { 
+				tokenObj.token = publicKey
+				return tokenObj.save();
+			}
+		}).then(() => {
 			return privateKey;
 		});
 	}
@@ -96,8 +102,6 @@ export default class AuthController {
 				password: AuthController.passHash(user.password),
 			}
 		})]).spread((elderFound: any, carerFound: any) => {
-			console.log(elderFound);
-			console.log(carerFound);
 			if (elderFound == null && carerFound == null) {
 				return Bluebird.reject("Error 5000: Cannot Find Account");
 			}
