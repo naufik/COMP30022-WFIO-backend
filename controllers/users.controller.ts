@@ -2,7 +2,9 @@ import * as Bluebird from 'bluebird';
 
 import Carer from '../models/carer.model';
 import Elder from '../models/elder.model';
+import ElderHasCarer from '../models/elderHasCarer.model';
 import Favorites from '../models/favorites.model';
+import TwoFactorCode from '../models/twoFactorCode.model';
 import AuthController from './auth.controller';
 import { NewUser, User } from '../interfaces/user.interface';
 
@@ -61,22 +63,38 @@ export default class UserController {
     }
 
     /**
-     * Need to add Methods that *READ* data here.
-     */
-
-    public static getElderData(id: string | number): Bluebird<User> {
-       return Bluebird.reject(new Error("0000: Not implemented."));
-    }
-
-    public static getCarerData(id: string | number): Bluebird<User> {
-        return Bluebird.reject(new Error("0000: Not implemented."));
-    }
-
-    /**
      * Methods to link a carer and an elder.
      */
 
     public static linkUsers(id: {elder: string | number, carer: string | number}) {
-        return Bluebird.reject(new Error("0000: Not implemented."));
+        ElderHasCarer.findOrCreate({
+            where: {
+            elderId: id.elder,
+            carerId: id.carer,
+            }
+        }).then((item) => {
+            return {
+                success: true,
+            }
+        });
+    }
+
+    public static requestLink() {
+        // CREATE RANDOM NUMBER
+    }
+
+    public static acceptLink(linkNumber: string) {
+        TwoFactorCode.findOne({
+            where: {
+                code: linkNumber
+            }
+        }).then((code: any) => {
+            return Elder.findById(code.elderId);
+        }).then((user: any) => {
+            return {
+                elderId: user.id,
+                code: linkNumber,
+            } 
+        });
     }
 }
