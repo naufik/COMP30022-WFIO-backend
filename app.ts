@@ -28,9 +28,13 @@ app.get('/', (req, res) => {
 });
 
 HTTP.createServer(app).listen(80, () => {
-    console.log("[system] HTTP Server Running");
-})
+    console.log("[http] HTTP Server Running");
+});
+
+HTTP.createServer(app).listen(3000, () => {
+    console.log("[http] Legacy 3000 Server Running");
+});
 
 HTTPS.createServer(credentials, app).listen(443, () => {
-    console.log("[system] HTTPS Server Running");
-})
+    console.log("[http] HTTPS Server Running");
+});
