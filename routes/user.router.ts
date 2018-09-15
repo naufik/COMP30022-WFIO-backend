@@ -36,6 +36,15 @@ UserRouter.post('/', (req: Request, res: Response) => {
                     return Bluebird.reject("403: Forbidden Access");
                 }
             });
+            break;
+        case "user.authtest":
+            actionReceipt = AuthController.authenticate(req.body.identity.email, req.body.identity.token).then((auth) => {
+                return {
+                    ok: true,
+                    result: auth,
+                };
+            });
+            break;
         default:
             actionReceipt = Bluebird.reject(new Error("Invalid Action"));
             break;
