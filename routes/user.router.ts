@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import AuthController from '../controllers/auth.controller';
 import UserController from '../controllers/users.controller'
 import { Action, Receipt, Token } from '../interfaces/action.interface';
-import { NewUser } from '../interfaces/user.interface';
+import { NewUser, Credentials } from '../interfaces/user.interface';
 import * as Bluebird from 'bluebird';
 
 const UserRouter: Router = Router();
@@ -17,9 +17,10 @@ UserRouter.get('/', (req: Request, res: Response) => {
 
 UserRouter.post('/', (req: Request, res: Response) => {
     let actionRequest: Action<any> = req.body;
-    let actionReceipt: Bluebird<Receipt<any>> = Bluebird.reject(new Error("Invalid Action"));
+    let actionReceipt: Bluebird<Receipt<any>>;
 
     console.log("New request received: " + actionRequest.action);
+    console.log(actionRequest);
     switch (actionRequest.action) {
         case "user.signup":
             actionReceipt = RouterFunctions.signUp(actionRequest.params);
@@ -28,6 +29,7 @@ UserRouter.post('/', (req: Request, res: Response) => {
             actionReceipt = RouterFunctions.login(actionRequest.params);
             break;
         default:
+            actionReceipt = Bluebird.reject(new Error("Invalid Action"));
             break;
     }
 
@@ -41,49 +43,30 @@ UserRouter.post('/', (req: Request, res: Response) => {
     });
 });
 
-RouterFunctions.signUp = (signUpParams: any): Bluebird<Receipt<Token>> => {
-    let params: NewUser = signUpParams;
-
-    // AuthController.login({
-    //     username: <string> action.params.username,
-    //     password: <string> action.params.password,
-    //     accountType: <string> action.params.accountType,
-    // }).then((auth) => {
-    //     res.json(auth);
-    // });
-
-    return new Bluebird((resolve, reject) => {
-        resolve({
-           ok: true,
-           result: {
-               token: "This is the example returned token"
-           }
+RouterFunctions.signUp = (userDetails: NewUser): Bluebird<Receipt<Token>> => {
+    
+    return UserController.createUser(userDetails).then((userEntry: NewUser) => {
+        return AuthController.login({
+            username: userEntry.username,
+            password: userDetails.password,
+        }).then((token) => {
+            return {
+                ok: true,
+                result: token,
+            }
         });
     });
 };
 
-RouterFunctions.login = (loginParams: any): Bluebird<Receipt<Token>> => {
-
-    // UserController.createUser(action.params)
-    //     .then((returned) => {
-    //         res.json(returned);     
-    //     }).then((user) => {
-    //         return AuthController.login({
-    //             username: action.params.username,
-    //             password: action.params.password,
-    //             accountType: action.params.accountType,
-    //         });
-    //     }).then((token) => {
-    //         res.json(token);
-    //     });
-
-    return new Bluebird((resolve, reject) => {
-        resolve({
-           ok: true,
-           result: {
-               token: "This is the example returned token"
-           }
-        });
+RouterFunctions.login = (loginParams: Credentials): Bluebird<Receipt<Token>> => {
+    return AuthController.login({
+        username: loginParams.username,
+        password: loginParams.password,
+    }).then((userToken: Token) => {
+        return {
+            ok: true,
+            result: userToken,
+        }
     });
 };
 

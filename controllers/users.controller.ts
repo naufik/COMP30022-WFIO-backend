@@ -8,21 +8,52 @@ import { NewUser, User } from '../interfaces/user.interface';
 
 export default class UserController {
     public static createUser(user: NewUser): Bluebird<any> {
+        let returnedPromise: Bluebird<any>;
+
         if (user.accountType == "CARER") {
-            return Carer.create({
+            returnedPromise = Carer.create({
                 email: user.email,
                 password: AuthController.passHash(user.password),
-                fullName: user.fullName, 
+                fullname: user.fullName,
+                username: user.username, 
             });
         } else if (user.accountType == "ELDER") {
-            return Elder.create({
+            returnedPromise = Elder.create({
                 email: user.email,
                 password: AuthController.passHash(user.password),
-                fullName: user.fullName,
+                fullname: user.fullName,
+                username: user.username,
             });
         } else {
-           return Bluebird.reject(new Error("6001: Invalid account type given."));
+           returnedPromise = Bluebird.reject(new Error("6001: Invalid account type given."));
         }
+
+        return returnedPromise;
+    }
+
+    public static getUserByEmail(email: string): Bluebird<{ user: User, kind: string } | null> {
+        return Bluebird.all([
+            Carer.findOne({
+                where: {
+                    email: email,
+                }
+            }),
+            Elder.findOne({
+                where: {
+                    email: email,
+                }
+            })
+        ]).spread((elderFound: any, carerFound: any) => {
+            if (elderFound == null && carerFound == null) {
+                return null
+            }
+
+            const userFound = (elderFound != null) ? elderFound : carerFound;
+            return {
+                user: userFound,
+                kind: (elderFound != null) ? "ELDER" : "CARER",
+            };
+        })
     }
 
     public static updateUser(user: User): Bluebird<any> {

@@ -2,16 +2,21 @@ import * as Sequelize from 'sequelize';
 import Credentials from '../.serverconfig/database';
 
 const connection = new Sequelize(
-  Credentials.url,
+  "wfio",
   Credentials.username,
   Credentials.password,
-  {}, // sequelize options
+  {
+    logging: false,
+    dialect: "postgresql",
+    host: Credentials.url,
+    port: Credentials.port,
+  }, // sequelize options
 );
 
 connection.authenticate().then(() => {
-  console.log("[[ Database Connected ]]");
+  console.log("[database] WFIO Database is Connected");
   if (Credentials.testEnvironment) {
-    console.log("[[ On Testbed Environment: Clearing All Databases ]]");
+    console.log("[database] Testbed mode is currently on, clearing all tables!");
   }
 
   connection.sync({
