@@ -33,6 +33,8 @@
   "devDependencies": {
     "@types/body-parser": "^1.17.0",
     "@types/cors": "^2.8.4",
-    "@types/node-rsa": "^0.4.3"
+    "@types/graceful-fs": "^4.1.2",
+    "@types/node-rsa": "^0.4.3",
+    "graceful-fs": "^4.1.11"
   }
 }
