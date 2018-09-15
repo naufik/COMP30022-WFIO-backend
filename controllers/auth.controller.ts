@@ -34,7 +34,11 @@ export default class AuthController {
 	 * @param user The user to generate the token to.
 	 */
 	private static generateToken(user: { id: string, kind: "ELDER" | "CARER" }): Bluebird<string> {
-		const dH = Crypto.createDiffieHellman(60);
+		const sdH = Crypto.createDiffieHellman(60);
+		sdH.setPrivateKey(_authconfig.serverPrivate, "hex");
+		sdH.setPublicKey(_authconfig.serverPublic, "hex");
+		
+		const dH = Crypto.createDiffieHellman(sdH.getPrime());
 		dH.generateKeys("base64");
 		const publicKey = dH.getPublicKey("hex");
 		const privateKey = dH.getPrivateKey("hex");
