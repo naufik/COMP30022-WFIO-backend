@@ -84,11 +84,6 @@ export default class AuthController {
 	 * @param tokenId 
 	 */
 	public static authenticate(userEmail: string, tokenId: string): Bluebird<{ verified: boolean, token: Token }> {
-		// This method should generate a random alphanumeric string, then encrypts it
-		// with the public key. An attempt to decrypt with the private key should then
-		// determine whether they are a key pair or not (if it results in identity).
-		const randStr = "O(n^4) algorithms are good enough CHANGE MY MIND";
-
 		const pubK = _authconfig.serverPublic;
 		const prvK = _authconfig.serverPrivate;
 		const serverDH = Crypto.createDiffieHellman(60);
