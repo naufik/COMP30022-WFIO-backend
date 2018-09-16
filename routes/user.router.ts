@@ -48,6 +48,13 @@ UserRouter.post('/', (req: Request, res: Response) => {
                 };
             });
             break;
+        case "user.deatils":
+            actionReceipt = UserController.getUserByEmail(req.body.identity.email, true).then((userInfo) => {
+                return {
+                    ok: true,
+                    result: userInfo
+                };
+            });
         default:
             actionReceipt = Bluebird.reject(new Error("Invalid Action"));
             break;
