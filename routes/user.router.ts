@@ -55,7 +55,7 @@ UserRouter.post('/', (req: Request, res: Response) => {
 
     actionReceipt.then((value) => {
         res.json(value);
-    }, (err: Error) => {
+    }).catch((err: Error) => {
         let rec: Receipt<any> = {
             ok: false,
             result: err,
@@ -65,12 +65,12 @@ UserRouter.post('/', (req: Request, res: Response) => {
 
 RouterFunctions.getLinkCode = (elderEmail: string): Bluebird<Receipt<any>> => {
     return UserController.getUserByEmail(elderEmail).then((user: any) => {
-        return UserController.requestLink(user.id).then((newCode) => {
+        return UserController.requestLink(user.user.id).then((newCode) => {
             return {
                 ok: true,
                 result: {
                     code: newCode.code,
-                    elderId: user.id
+                    elderId: user.user.id
                 }
             };
         });
