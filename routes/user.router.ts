@@ -35,7 +35,7 @@ UserRouter.post('/', (req: Request, res: Response) => {
 
     actionReceipt.then((value) => {
         res.json(value);
-    }).catch((err: Error) => {
+    }, (err: Error) => {
         let rec: Receipt<any> = {
             ok: false,
             result: err,
