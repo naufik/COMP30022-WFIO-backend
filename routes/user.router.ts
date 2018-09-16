@@ -55,6 +55,7 @@ UserRouter.post('/', (req: Request, res: Response) => {
                     result: userInfo
                 };
             });
+            break;
         default:
             actionReceipt = Bluebird.reject(new Error("Invalid Action"));
             break;
