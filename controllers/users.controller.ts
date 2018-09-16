@@ -33,8 +33,8 @@ export default class UserController {
         return returnedPromise;
     }
 
-    public static getUserByEmail(email: string): Bluebird<any | null> {
-        return Bluebird.all([
+    public static getUserByEmail(email: string, clean: boolean = false): Bluebird<any | null> {
+        const data = Bluebird.all([
             Carer.findOne({
                 where: {
                     email: email,
@@ -95,6 +95,15 @@ export default class UserController {
             user.accountType = (userInfo.favorites ? "ELDER" : "CARER");
             return userInfo;
         });
+
+        if (clean) {
+            return data.then((userInfo: any) => {
+                delete userInfo.password;
+                delete userInfo.id;
+                return userInfo;
+            });
+        }
+        return data;
     }
 
     public static updateUser(user: User): Bluebird<any> {
