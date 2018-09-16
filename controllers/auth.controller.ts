@@ -155,17 +155,17 @@ export default class AuthController {
 			}
 			
 			const userFound = (elderFound != null) ? elderFound : carerFound;
+			userFound.accountType = (elderFound != null) ? "ELDER" : "CARER";
 
 			return AuthController.generateToken({
 				id: userFound.id,
-				kind: (elderFound != null) ? "ELDER" : "CARER",
+				kind: userFound.accountType,
 			}).then((tokenString: string): Token => {
 				return {
 					token: tokenString,
-					user: (elderFound != null) ? elderFound : carerFound,
+					user: userFound,
 				};
 			});
-
 		});
 
 	}
