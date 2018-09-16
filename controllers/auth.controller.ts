@@ -121,12 +121,17 @@ export default class AuthController {
 					let rhs = serverDH.computeSecret(userDH.getPublicKey());
 					verificationDone = lhs == rhs;
 				}
-				return {
+
+				if (!verificationDone) {
+					return Bluebird.reject(new Error("403: Forbidden"));
+				}
+				
+				return Bluebird.resolve({
 					verified: verificationDone,
 					token: {
 						token: tokenId
 					}
-				}
+				});
 			})
 		
 
