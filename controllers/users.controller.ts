@@ -143,7 +143,7 @@ export default class UserController {
         return returnedPromise;
     }
 
-    public static acceptLink(linkNumber: string) {
+    public static acceptLink(carerId: string, linkNumber: string) {
         return TwoFactorCode.findOne({
             where: {
                 code: linkNumber
@@ -154,10 +154,21 @@ export default class UserController {
             }
             return Elder.findById(code.elderId);
         }).then((user: any) => {
-            return {
-                elderId: user.id,
-                code: linkNumber,
-            } 
+            return Carer.findOne({
+                where: {
+                    email: carerId
+                }
+            }).then((carer: any) => {
+                return UserController.linkUsers({
+                    elder: user.id,
+                    carer: carer.id,
+                });
+            }).then((result) => {
+                return {
+                    elderId: user.id,
+                    code: linkNumber,
+                } 
+            });
         });
     }
 }

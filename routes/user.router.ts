@@ -77,15 +77,6 @@ RouterFunctions.getLinkCode = (elderEmail: string): Bluebird<Receipt<any>> => {
     })
 }
 
-RouterFunctions.linkElder = (linkCode: string): Bluebird<Receipt<any>> => {
-    return UserController.acceptLink(linkCode).then((returned) => {
-        return {
-            ok: true,
-            result: returned
-        };
-    });
-}
-
 RouterFunctions.signUp = (userDetails: NewUser): Bluebird<Receipt<Token>> => {
     return UserController.createUser(userDetails).then((userEntry: NewUser) => {
         return AuthController.login({
@@ -112,8 +103,8 @@ RouterFunctions.login = (loginParams: Credentials): Bluebird<Receipt<Token>> => 
     });
 };
 
-RouterFunctions.linkElder = (linkParams: { code: string }): Bluebird<Receipt<any>> => {
-    return UserController.acceptLink(linkParams.code).then((result) => {
+RouterFunctions.linkElder = (carerEmail: string, linkParams: { code: string }): Bluebird<Receipt<any>> => {
+    return UserController.acceptLink(carerEmail, linkParams.code).then((result) => {
         return {
             ok: true,
             result: result,
