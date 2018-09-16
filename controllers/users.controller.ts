@@ -33,7 +33,7 @@ export default class UserController {
         return returnedPromise;
     }
 
-    public static getUserByEmail(email: string): Bluebird<{ user: User, kind: string } | null> {
+    public static getUserByEmail(email: string): Bluebird<any | null> {
         return Bluebird.all([
             Carer.findOne({
                 where: {
@@ -55,7 +55,47 @@ export default class UserController {
                 user: userFound,
                 kind: (elderFound != null) ? "ELDER" : "CARER",
             };
-        })
+        }).then((userInfo: any) => {
+            if (userInfo != null) {
+                const user = userInfo.user.toJSON();
+                if (userInfo.kind === "ELDER") {
+                    // need to extract list of carers and list of favorite locations.
+                    return Bluebird.all([
+                        Favorites.findAll({
+                            where: {
+                                elderId: user.id
+                            }
+                        }),
+                        ElderHasCarer.findAll({
+                            where: {
+                                elderId: user.id
+                            }
+                        })
+                    ]).spread((favorites: any[], connections: any[]) => {
+                        user.favorites = favorites.map(thing => thing.toJSON());
+                        user.carersList = connections.map(thing => thing.toJSON().carerId);
+                        return user;
+                    });
+                } else if (userInfo.kind == "CARER") {
+                    // need to extract the list of elders this guy is taking care of
+                    return ElderHasCarer.findAll({
+                        where: {
+                            carerId: user.id
+                        }
+                    }).then((connections: any[]) => {
+                        user.eldersList = connections.map(thing => thing.toJSON().elderId);
+                        return user;
+                    });
+                } else {
+                    return Bluebird.reject(new Error("0000: Not Implemented"));
+                }
+            }              
+        }).then((userInfo) => {
+            return {
+                user: userInfo,
+                kind: (userInfo.carersList ? "ELDER" : "CARER")
+            };
+        });
     }
 
     public static updateUser(user: User): Bluebird<any> {
