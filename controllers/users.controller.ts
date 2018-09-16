@@ -149,15 +149,11 @@ export default class UserController {
                 code: linkNumber
             }
         }).then((code: any) => {
-            console.log(code);
-            if (code != null) {
+            if (code == null) {
                 return Bluebird.reject("Error: Two factor code incorrect.`")
             }
-            console.log(code.toJSON());
             return Elder.findById(code.elderId);
         }).then((user: any) => {
-            console.log(user);
-            console.log(user.id);
             return {
                 elderId: user.id,
                 code: linkNumber,
