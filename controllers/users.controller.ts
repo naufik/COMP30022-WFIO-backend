@@ -89,6 +89,11 @@ export default class UserController {
                     return Bluebird.reject(new Error("0000: Not Implemented"));
                 }
             }              
+        }).then((userInfo) => {
+            return {
+                user: userInfo,
+                kind: (userInfo.carersList ? "ELDER" : "CARER")
+            };
         });
     }
 
