@@ -156,17 +156,19 @@ export default class AuthController {
 			}
 			
 			const userFound = (elderFound != null) ? elderFound : carerFound;
+			const accType = (elderFound != null) ? "ELDER" : "CARER";
+
 			return AuthController.generateToken({
 				id: userFound.id,
-				kind: userFound.accountType,
+				kind: accType,
 			}).then((tokenString: string): Token => {
 				const returnedUser = userFound.values;
-				userFound.accountType = (elderFound != null) ? "ELDER" : "CARER";
+				returnedUser.accountType = accType;
 				
-				delete userFound.password;
+				delete returnedUser.password;
 				return {
 					token: tokenString,
-					user: userFound,
+					user: returnedUser,
 				};
 			});
 		});
