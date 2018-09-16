@@ -28,7 +28,8 @@ UserRouter.post('/', (req: Request, res: Response) => {
         case "user.login":
             actionReceipt = RouterFunctions.login(actionRequest.params);
             break;
-        case "user.getlinkcode": 
+        case "user.genlink":
+
             actionReceipt = AuthController.authenticate(req.body.identity.email, req.body.identity.token).then((auth) => {
                 if (auth.verified) {
                     return RouterFunctions.getLinkCode(req.body.identity.email);
