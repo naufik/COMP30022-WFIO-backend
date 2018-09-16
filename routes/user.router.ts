@@ -38,7 +38,7 @@ UserRouter.post('/', (req: Request, res: Response) => {
             // });
             break;
         case "user.link":
-            actionReceipt = Bluebird.reject(new Error("0000: Not Implemented"));
+            actionReceipt = RouterFunctions.linkElder(actionRequest.params);
             break;
         case "user.authtest":
             actionReceipt = AuthController.authenticate(req.body.identity.email, req.body.identity.token).then((auth) => {
@@ -110,6 +110,15 @@ RouterFunctions.login = (loginParams: Credentials): Bluebird<Receipt<Token>> => 
             result: userToken,
         }
     });
+};
+
+RouterFunctions.linkElder = (linkParams: { code: string }): Bluebird<Receipt<any>> => {
+    return UserController.acceptLink(linkParams.code).then((result) => {
+        return {
+            ok: true,
+            result: result,
+        };
+    })
 };
 
 export default UserRouter;
