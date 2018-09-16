@@ -28,6 +28,26 @@ UserRouter.post('/', (req: Request, res: Response) => {
         case "user.login":
             actionReceipt = RouterFunctions.login(actionRequest.params);
             break;
+        case "user.genlink":
+            // actionReceipt = AuthController.authenticate(req.body.identity.email, req.body.identity.token).then((auth) => {
+                // if (auth.verified) {
+                    actionReceipt =  RouterFunctions.getLinkCode(req.body.identity.email);
+                // } else {
+                    // return Bluebird.reject("403: Forbidden Access");
+                // }
+            // });
+            break;
+        case "user.link":
+            actionReceipt = RouterFunctions.linkElder(actionRequest.params);
+            break;
+        case "user.authtest":
+            actionReceipt = AuthController.authenticate(req.body.identity.email, req.body.identity.token).then((auth) => {
+                return {
+                    ok: true,
+                    result: auth,
+                };
+            });
+            break;
         default:
             actionReceipt = Bluebird.reject(new Error("Invalid Action"));
             break;
@@ -43,8 +63,21 @@ UserRouter.post('/', (req: Request, res: Response) => {
     });
 });
 
+RouterFunctions.getLinkCode = (elderEmail: string): Bluebird<Receipt<any>> => {
+    return UserController.getUserByEmail(elderEmail).then((user: any) => {
+        return UserController.requestLink(user.user.id).then((newCode) => {
+            return {
+                ok: true,
+                result: {
+                    code: newCode.code,
+                    elderId: user.user.id
+                }
+            };
+        });
+    })
+}
+
 RouterFunctions.signUp = (userDetails: NewUser): Bluebird<Receipt<Token>> => {
-    
     return UserController.createUser(userDetails).then((userEntry: NewUser) => {
         return AuthController.login({
             username: userEntry.username,
@@ -68,6 +101,15 @@ RouterFunctions.login = (loginParams: Credentials): Bluebird<Receipt<Token>> => 
             result: userToken,
         }
     });
+};
+
+RouterFunctions.linkElder = (carerEmail: string, linkParams: { code: string }): Bluebird<Receipt<any>> => {
+    return UserController.acceptLink(carerEmail, linkParams.code).then((result) => {
+        return {
+            ok: true,
+            result: result,
+        };
+    })
 };
 
 export default UserRouter;

@@ -34,7 +34,11 @@ export default class AuthController {
 	 * @param user The user to generate the token to.
 	 */
 	private static generateToken(user: { id: string, kind: "ELDER" | "CARER" }): Bluebird<string> {
-		const dH = Crypto.createDiffieHellman(60);
+		const sdH = Crypto.createDiffieHellman(60);
+		sdH.setPrivateKey(_authconfig.serverPrivate, "hex");
+		sdH.setPublicKey(_authconfig.serverPublic, "hex");
+		
+		const dH = Crypto.createDiffieHellman(sdH.getPrime());
 		dH.generateKeys("base64");
 		const publicKey = dH.getPublicKey("hex");
 		const privateKey = dH.getPrivateKey("hex");
@@ -80,11 +84,6 @@ export default class AuthController {
 	 * @param tokenId 
 	 */
 	public static authenticate(userEmail: string, tokenId: string): Bluebird<{ verified: boolean, token: Token }> {
-		// This method should generate a random alphanumeric string, then encrypts it
-		// with the public key. An attempt to decrypt with the private key should then
-		// determine whether they are a key pair or not (if it results in identity).
-		const randStr = "O(n^4) algorithms are good enough CHANGE MY MIND";
-
 		const pubK = _authconfig.serverPublic;
 		const prvK = _authconfig.serverPrivate;
 		const serverDH = Crypto.createDiffieHellman(60);
@@ -122,12 +121,17 @@ export default class AuthController {
 					let rhs = serverDH.computeSecret(userDH.getPublicKey());
 					verificationDone = lhs == rhs;
 				}
-				return {
+
+				if (!verificationDone) {
+					return Bluebird.reject(new Error("403: Forbidden"));
+				}
+				
+				return Bluebird.resolve({
 					verified: verificationDone,
 					token: {
 						token: tokenId
 					}
-				}
+				});
 			})
 		
 
@@ -156,17 +160,21 @@ export default class AuthController {
 			}
 			
 			const userFound = (elderFound != null) ? elderFound : carerFound;
+			const accType = (elderFound != null) ? "ELDER" : "CARER";
 
 			return AuthController.generateToken({
 				id: userFound.id,
-				kind: (elderFound != null) ? "ELDER" : "CARER",
+				kind: accType,
 			}).then((tokenString: string): Token => {
+				const returnedUser = userFound.toJSON();
+				returnedUser.accountType = accType;
+				
+				delete returnedUser.password;
 				return {
 					token: tokenString,
-					user: (elderFound != null) ? elderFound : carerFound,
+					user: returnedUser,
 				};
 			});
-
 		});
 
 	}
