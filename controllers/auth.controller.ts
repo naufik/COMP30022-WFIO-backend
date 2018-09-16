@@ -161,6 +161,7 @@ export default class AuthController {
 				id: userFound.id,
 				kind: accType,
 			}).then((tokenString: string): Token => {
+				console.log("this is reached");
 				const returnedUser = userFound.values;
 				returnedUser.accountType = accType;
 				
