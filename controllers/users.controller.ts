@@ -82,14 +82,14 @@ export default class UserController {
                             carerId: user.id
                         }
                     }).then((connections: any[]) => {
-                        user.eldersList = connections.map(thing => thing.toJSON());
+                        user.eldersList = connections.map(thing => thing.toJSON().elderId);
                         return user;
                     });
                 } else {
                     return Bluebird.reject(new Error("0000: Not Implemented"));
                 }
             }              
-        })
+        });
     }
 
     public static updateUser(user: User): Bluebird<any> {
