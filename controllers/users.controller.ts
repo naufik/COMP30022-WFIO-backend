@@ -74,7 +74,11 @@ export default class UserController {
                     ]).spread((favorites: any[], connections: any[]) => {
                         user.favorites = favorites.map(thing => thing.toJSON());
                         return Bluebird.all(connections.map(thing => {
+<<<<<<< HEAD
                         Carer.findById(thing.toJSON().carerId);  
+=======
+                          return Carer.findById(thing.toJSON().carerId);  
+>>>>>>> control-routes
                         })).then((clist) => {
                             user.carerList = clist.map((c: any) => {
                                 const car = c.toJSON();
@@ -95,7 +99,7 @@ export default class UserController {
                         }
                     }).then((connections: any[]) => {
                         return Bluebird.all(connections.map(thing => {
-                            Elder.findById(thing.toJSON().elderId);  
+                            return Elder.findById(thing.toJSON().elderId);  
                           })).then((elist) => {
                               user.elderList = elist.map((e: any) => {
                                   const eld = e.toJSON();
