@@ -45,3 +45,13 @@ const server3 = HTTPS.createServer(credentials, app).listen(443, () => {
 const io1 = Socket(server1);
 const io2 = Socket(server2);
 const io3 = Socket(server3);
+
+[io1, io2, io3].map((thing) => {
+    thing.on('connect', (socket: Socket.Socket) => {
+        console.log("someone connected");
+    });
+
+    thing.on('disconnect', (socket: Socket.Socket) => {
+        console.log("someone disconnected");
+    });
+})
