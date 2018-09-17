@@ -38,7 +38,7 @@ UserRouter.post('/', (req: Request, res: Response) => {
             // });
             break;
         case "user.link":
-            actionReceipt = RouterFunctions.linkElder(actionRequest.params);
+            actionReceipt = RouterFunctions.linkElder(req.body.identity.email, actionRequest.params);
             break;
         case "user.authtest":
             actionReceipt = AuthController.authenticate(req.body.identity.email, req.body.identity.token).then((auth) => {
