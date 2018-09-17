@@ -85,8 +85,19 @@ export default class MessagingController {
         msg.save();
       });
 
+
       return {
-        messages: sortedMessages.map(thing => thing.toJSON()),
+        messages: sortedMessages.map(thing => thing.toJSON()).sort((m, n) => {
+          let md: Date = new Date(m.timestamp);
+          let nd: Date = new Date(n.timestamp);
+          if (md > nd) {
+            return 1;
+          }
+          if (nd < md) {
+            return -1;
+          }
+          return 0;
+        }),
       };
     });
   }
