@@ -7,6 +7,7 @@ import * as CORS from 'cors';
 import * as Socket from 'socket.io';
 import * as BodyParser from 'body-parser';
 import UserRouter from './routes/user.router';
+import MsgRouter from './routes/messaging.router';
 
 const app: Express.Application = Express();
 const credentials = {

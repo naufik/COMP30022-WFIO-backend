@@ -14,7 +14,7 @@ MsgRouter.post('/', (req: Request, res: Response) => {
   const action = req.body.action;
 
   let returnedPromise: Bluebird<any> = Bluebird.resolve(true);
-
+  console.log(req.body);
   switch(action) {
     case "msg.send":
     // works as an echo for now
@@ -33,5 +33,6 @@ MsgRouter.post('/', (req: Request, res: Response) => {
   returnedPromise.then((result) => {
     res.json(result);
   })
-
 });
+
+export default MsgRouter;
