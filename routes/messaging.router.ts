@@ -38,6 +38,14 @@ MsgRouter.post('/', (req: Request, res: Response) => {
         }
       });
       break;
+    case "msg.sos":
+      returnedPromise = MessageController.notifyCarers(identity.email).then((success) => {
+        return {
+          ok: true,
+          result: {}
+        };
+      });
+      break;
     default:
       res.send("action not found");
       break;

@@ -90,4 +90,8 @@ export default class MessagingController {
       };
     });
   }
+
+  public static notifyCarers(identity: string, params?: any) {
+    return Bluebird.resolve(true);
+  } 
 }
