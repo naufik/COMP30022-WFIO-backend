@@ -73,14 +73,21 @@ export default class UserController {
                         })
                     ]).spread((favorites: any[], connections: any[]) => {
                         user.favorites = favorites.map(thing => thing.toJSON());
-                        user.carersList = connections.map(thing => {
-                            const carer = thing.toJSON();
-                            return {
-                                id: carer.id,
-                                fullname: carer.fullname,
-                            }
+
+                        return Bluebird.all(connections.map(thing => {
+                          Carer.findById(thing.toJSON().carerId);  
+                        })).then((clist) => {
+                            user.carerList = clist.map((c: any) => {
+                                const car = c.toJSON();
+                                return {
+                                    id: car.id,
+                                    fullname: car.fullname,
+                                    username: car.username,
+                                }
+                            });
+
+                            return user;
                         });
-                        return user;
                     });
                 } else if (userInfo.kind == "CARER") {
                     // need to extract the list of elders this guy is taking care of
@@ -89,14 +96,20 @@ export default class UserController {
                             carerId: user.id
                         }
                     }).then((connections: any[]) => {
-                        user.eldersList = connections.map(thing => {
-                            const elder = thing.toJSON();
-                            return {
-                                id: elder.id,
-                                fullname: elder.fullname,
-                            }
-                        });
-                        return user;
+                        return Bluebird.all(connections.map(thing => {
+                            Elder.findById(thing.toJSON().elderId);  
+                          })).then((elist) => {
+                              user.elderList = elist.map((e: any) => {
+                                  const eld = e.toJSON();
+                                  return {
+                                    id: eld.id,
+                                    fullname: eld.fullname,
+                                    username: eld.username,
+                                }
+                              });
+  
+                              return user;
+                          });
                     });
                 } else {
                     return Bluebird.reject(new Error("0000: Not Implemented"));
@@ -116,7 +129,9 @@ export default class UserController {
             });
         }
 
-        return data;
+        return data.then((info) => {
+            return { user: info };
+        });
     }
 
     public static updateUser(user: User): Bluebird<any> {

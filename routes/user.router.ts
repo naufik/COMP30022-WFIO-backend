@@ -15,7 +15,7 @@ UserRouter.get('/', (req: Request, res: Response) => {
         UserController.getUserByEmail(<string>identity, true).then((user) => {
             res.json({
                 ok: true,
-                result: { user: user },
+                result: user,
             });
         });
     }
