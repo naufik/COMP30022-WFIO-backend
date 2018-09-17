@@ -31,6 +31,7 @@ export default class MessagingController {
       }
       return Message.create({
         elderhascarerId: connection.id,
+        timestamp: new Date(),
         content: params.content,
         location: poly,
         polled: false, 
