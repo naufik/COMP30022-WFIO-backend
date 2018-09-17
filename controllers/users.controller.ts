@@ -116,7 +116,9 @@ export default class UserController {
             });
         }
 
-        return data;
+        return data.then((info) => {
+            return { user: info };
+        });
     }
 
     public static updateUser(user: User): Bluebird<any> {
