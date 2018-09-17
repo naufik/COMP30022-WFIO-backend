@@ -9,6 +9,9 @@ const Message = Database.define("message", {
     content: {
         type: Sequelize.STRING(160),
     },
+    polled: {
+        type: Sequelize.BOOLEAN,
+    }
 }); 
 
 Message.belongsTo(ElderHasCarer)
