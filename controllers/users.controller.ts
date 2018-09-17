@@ -74,11 +74,7 @@ export default class UserController {
                     ]).spread((favorites: any[], connections: any[]) => {
                         user.favorites = favorites.map(thing => thing.toJSON());
                         return Bluebird.all(connections.map(thing => {
-<<<<<<< HEAD
-                        Carer.findById(thing.toJSON().carerId);  
-=======
                           return Carer.findById(thing.toJSON().carerId);  
->>>>>>> control-routes
                         })).then((clist) => {
                             user.carerList = clist.map((c: any) => {
                                 const car = c.toJSON();
