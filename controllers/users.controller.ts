@@ -35,12 +35,12 @@ export default class UserController {
 
     public static getUserByEmail(email: string, clean: boolean = false): Bluebird<any | null> {
         const data = Bluebird.all([
-            Carer.findOne({
+            Elder.findOne({
                 where: {
                     email: email,
                 }
             }),
-            Elder.findOne({
+            Carer.findOne({
                 where: {
                     email: email,
                 }
