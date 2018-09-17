@@ -66,7 +66,7 @@ export default class MessagingController {
               elderhascarerId: thing.toJSON().id,
             }
           }),
-          location: ("ELDER" ? {
+          location: (kind == "ELDER" ? {
             [Op.eq]: null,
           } : {
             [Op.not]: null
