@@ -117,6 +117,7 @@ export default class UserController {
             }              
         }).then((userInfo) => {
             const user = userInfo;
+            console.log(user);
             user.accountType = (userInfo.favorites ? "ELDER" : "CARER");
             return userInfo;
         });
