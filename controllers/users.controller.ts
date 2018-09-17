@@ -73,7 +73,13 @@ export default class UserController {
                         })
                     ]).spread((favorites: any[], connections: any[]) => {
                         user.favorites = favorites.map(thing => thing.toJSON());
-                        user.carersList = connections.map(thing => thing.toJSON().carerId);
+                        user.carersList = connections.map(thing => {
+                            const carer = thing.toJSON();
+                            return {
+                                id: carer.id,
+                                fullname: carer.fullname,
+                            }
+                        });
                         return user;
                     });
                 } else if (userInfo.kind == "CARER") {
@@ -83,7 +89,13 @@ export default class UserController {
                             carerId: user.id
                         }
                     }).then((connections: any[]) => {
-                        user.eldersList = connections.map(thing => thing.toJSON().elderId);
+                        user.eldersList = connections.map(thing => {
+                            const elder = thing.toJSON();
+                            return {
+                                id: elder.id,
+                                fullname: elder.fullname,
+                            }
+                        });
                         return user;
                     });
                 } else {
