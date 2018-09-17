@@ -9,10 +9,17 @@ const UserRouter: Router = Router();
 const RouterFunctions: any = {}
 
 UserRouter.get('/', (req: Request, res: Response) => {
-    res.json({
-        endpoint: "users",
-        online: true,
-    });
+    if (req.headers["XWfio-Identity"]) {
+        const identity = req.headers["XWfio-Identity"]
+        const token = req.headers["XWfio-Secret"]
+        UserController.getUserByEmail(<string>identity, true).then((user) => {
+            res.json({
+                ok: true,
+                result: user,
+            });
+        });
+    }
+    
 });
 
 UserRouter.post('/', (req: Request, res: Response) => {
