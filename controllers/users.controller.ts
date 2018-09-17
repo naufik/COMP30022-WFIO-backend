@@ -91,7 +91,7 @@ export default class UserController {
                 }
             }              
         }).then((userInfo) => {
-            const user = userInfo.toJSON();
+            const user = userInfo;
             user.accountType = (userInfo.favorites ? "ELDER" : "CARER");
             return userInfo;
         });
