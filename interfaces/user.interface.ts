@@ -5,7 +5,6 @@
 export interface User {
     id: string | number,
     username?: string,
-    fullName?: string,
     email?: string,
     password?: string,
     accountType?: "ELDER" | "CARER",

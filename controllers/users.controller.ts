@@ -119,25 +119,7 @@ export default class UserController {
     }
 
     public static updateUser(user: User): Bluebird<any> {
-        const replacements: any = {};    
-        if (user.password) {
-            replacements.password = AuthController.passHash(user.password);
-        }
-        if (user.fullName) {
-            replacements.fullname = user.fullName;
-        }
-        const Table = (user.accountType == "ELDER" ? Elder : Carer);
-            
-        return Table.update(replacements, {
-            where: {
-                email: <string>user.email,
-            },
-            returning: true,
-        }).spread((num: number, instances: any[]) => {
-            if (num == 1) {
-                return instances[0].toJSON();
-            }
-        });
+        return Bluebird.reject(new Error("0000: Not implemented."));
     }
 
     /**
