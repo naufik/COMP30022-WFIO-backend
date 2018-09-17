@@ -15,7 +15,7 @@ MsgRouter.get('/', (req: Request, res: Response) => {
     MessageController.pollMessages(<string>identity, {}).then((msgs) => {
       res.json({
         ok: true,
-        results: msgs,
+        result: msgs,
       });
     });
 }
