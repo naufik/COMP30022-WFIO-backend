@@ -10,8 +10,8 @@ const RouterFunctions: any = {};
 
 MsgRouter.get('/', (req: Request, res: Response) => {
   if (req.headers) {
-    const identity = req.headers["xwfio-identity"]
-    const token = req.headers["xwfio-secret"]
+    const identity = req.headers["xwfio-identity"];
+    const token = req.headers["xwfio-secret"];
     MessageController.pollMessages(<string>identity, {}).then((msgs) => {
       res.json({
         ok: true,
