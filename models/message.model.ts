@@ -11,6 +11,9 @@ const Message = Database.define("message", {
     },
     polled: {
         type: Sequelize.BOOLEAN,
+    },
+    location: {
+        type: Sequelize.GEOMETRY
     }
 }); 
 
