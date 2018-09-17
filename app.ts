@@ -19,6 +19,7 @@ app.use(CORS());
 app.use(BodyParser.json());
 
 app.use('/user', UserRouter);
+app.use('/msg', MsgRouter);
 app.get('/', (req, res) => {
     console.log("received new request");
     res.json({
