@@ -72,11 +72,17 @@ export default class MessagingController {
       });
 
     }).then((messages: any[]) => {
+      const sortedMessages = messages.sort((t1: any, t2: any) => {
+        return 1;  
+      });
+      
+      sortedMessages.forEach((msg) => {
+        msg.polled = true,
+        msg.save();
+      });
+
       return {
-        messages: messages.sort((t1: any, t2: any) => {
-          // compare by date later on.
-          return 1;  
-        })
+        messages: sortedMessages.map(thing => thing.toJSON()),
       };
     });
   }
