@@ -63,6 +63,10 @@ UserRouter.post('/', (req: Request, res: Response) => {
                 };
             });
             break;
+        case "user.modify":
+            actionRequest.params.email = req.body.identity.email;
+            actionReceipt = UserController.updateUser(actionRequest.params);
+            break;
         default:
             actionReceipt = Bluebird.reject(new Error("Invalid Action"));
             break;
