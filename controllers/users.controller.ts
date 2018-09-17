@@ -76,6 +76,8 @@ export default class UserController {
                         return Bluebird.all(connections.map(thing => {
                           Carer.findById(thing.toJSON().carerId);  
                         })).then((clist) => {
+                            console.log("AD");
+                            console.log(clist);
                             user.carerList = clist.map((c: any) => {
                                 console.log(c);
                                 const car = c.toJSON();
