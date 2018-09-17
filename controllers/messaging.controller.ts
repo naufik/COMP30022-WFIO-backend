@@ -45,27 +45,31 @@ export default class MessagingController {
       const type = user.accountType;
       
       if (type === "ELDER") {
-        return ElderHasCarer.findAll({
+        return Bluebird.all([ElderHasCarer.findAll({
           where: {
             elderId: user.id,
           }
-        });
+        }), "ELDER"]);
       } else if (type === "CARER") {
-        return ElderHasCarer.findAll({
+        return Bluebird.all([ElderHasCarer.findAll({
           where: {
             carerId: user.id,
           }
-        })
+        }), "CARER"]);
       } 
       return Bluebird.reject(new Error("User Not Found"));
-    }).then((connections: any[]) => {
-
+    }).spread((connections: any[], kind: string) => {
       return Message.findAll({
         where: {
           [Op.or]: connections.map((thing) => {
             return {
               elderhascarerId: thing.toJSON().id,
             }
+          }),
+          location: ("ELDER" ? {
+            [Op.eq]: null,
+          } : {
+            [Op.not]: null
           }), 
           polled: false,
         }
