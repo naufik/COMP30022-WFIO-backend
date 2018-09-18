@@ -128,7 +128,7 @@ export default class UserController {
         }
 
         return data.then((info) => {
-            return { user: info };
+            return info;
         });
     }
 
