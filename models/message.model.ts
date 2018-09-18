@@ -9,6 +9,12 @@ const Message = Database.define("message", {
     content: {
         type: Sequelize.STRING(160),
     },
+    polled: {
+        type: Sequelize.BOOLEAN,
+    },
+    location: {
+        type: Sequelize.GEOMETRY
+    }
 }); 
 
 Message.belongsTo(ElderHasCarer)

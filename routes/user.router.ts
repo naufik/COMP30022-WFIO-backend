@@ -9,10 +9,19 @@ const UserRouter: Router = Router();
 const RouterFunctions: any = {}
 
 UserRouter.get('/', (req: Request, res: Response) => {
-    res.json({
-        endpoint: "users",
-        online: true,
-    });
+    if (req.headers) {
+        const identity = req.headers["xwfio-identity"]
+        const token = req.headers["xwfio-secret"]
+        UserController.getUserByEmail(<string>identity, true).then((user) => {
+            res.json({
+                ok: true,
+                result: { 
+                    user: user
+                },
+            });
+        });
+    }
+    
 });
 
 UserRouter.post('/', (req: Request, res: Response) => {
@@ -38,13 +47,21 @@ UserRouter.post('/', (req: Request, res: Response) => {
             // });
             break;
         case "user.link":
-            actionReceipt = RouterFunctions.linkElder(actionRequest.params);
+            actionReceipt = RouterFunctions.linkElder(req.body.identity.email, actionRequest.params);
             break;
         case "user.authtest":
             actionReceipt = AuthController.authenticate(req.body.identity.email, req.body.identity.token).then((auth) => {
                 return {
                     ok: true,
                     result: auth,
+                };
+            });
+            break;
+        case "user.deatils":
+            actionReceipt = UserController.getUserByEmail(req.body.identity.email, true).then((userInfo) => {
+                return {
+                    ok: true,
+                    result: userInfo
                 };
             });
             break;
@@ -65,12 +82,12 @@ UserRouter.post('/', (req: Request, res: Response) => {
 
 RouterFunctions.getLinkCode = (elderEmail: string): Bluebird<Receipt<any>> => {
     return UserController.getUserByEmail(elderEmail).then((user: any) => {
-        return UserController.requestLink(user.user.id).then((newCode) => {
+        return UserController.requestLink(user.id).then((newCode) => {
             return {
                 ok: true,
                 result: {
                     code: newCode.code,
-                    elderId: user.user.id
+                    elderId: user.id
                 }
             };
         });
