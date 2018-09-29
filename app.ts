@@ -8,6 +8,7 @@ import * as Socket from 'socket.io';
 import * as BodyParser from 'body-parser';
 import UserRouter from './routes/user.router';
 import MsgRouter from './routes/messaging.router';
+import NotifRouter from './routes/notification.router';
 
 const app: Express.Application = Express();
 const credentials = {
@@ -20,6 +21,8 @@ app.use(BodyParser.json());
 
 app.use('/user', UserRouter);
 app.use('/msg', MsgRouter);
+app.use('/notif', NotifRouter);
+
 app.get('/', (req, res) => {
     console.log("received new request");
     res.json({
