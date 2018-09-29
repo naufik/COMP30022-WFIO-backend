@@ -97,7 +97,8 @@ export default class MessagingController {
       return Bluebird.all(sortedMessages.map(thing => ElderHasCarer.findById(thing.elderhascarerId).then((connection: any) => {
         const m = thing.toJSON();
         let returnedMessage: any = {};
-          
+        
+        returnedMessage.location = m.location;
         returnedMessage.timestamp = m.timestamp;
         returnedMessage.content = m.content;
         returnedMessage.from = connection.toJSON().carerId;
