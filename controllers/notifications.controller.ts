@@ -43,7 +43,7 @@ export default class NotificationController {
           content: {
             from: {
               fullname: user.fullname,
-              username: user.username,              
+              email: user.email,              
             }
           },
         });
