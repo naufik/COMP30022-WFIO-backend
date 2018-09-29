@@ -47,7 +47,9 @@ export default class NotificationController {
         });
       });
 
-      return Bluebird.resolve({});
+      return Bluebird.resolve({
+        success: true,
+      });
     });
   }
 
