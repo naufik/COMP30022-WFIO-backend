@@ -24,9 +24,7 @@ export default class NotificationController {
       });
     }).then((notifs) => {
       this.notificationsQueue = this.notificationsQueue.filter(thing => thing.to != email);
-      return {
-        notifications: notifs
-      };
+      return notifs;
     });
   }
 

@@ -17,7 +17,7 @@ NotifRouter.get('/', (req, res) => {
         result: notifications,
       });
     });
-}
+  }
 });
 
 export default NotifRouter;
