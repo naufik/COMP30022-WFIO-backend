@@ -38,7 +38,7 @@ export default class NotificationController {
 
       user.carersList.forEach((carer) => {
         this.addNotification({
-          to: carer.username,
+          to: carer.email,
           redirect: "sos.respond",
           content: {
             from: {
