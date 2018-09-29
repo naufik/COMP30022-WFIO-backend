@@ -77,28 +77,35 @@ export default class MessagingController {
       });
 
     }).then((messages: any[]) => {
-      const sortedMessages = messages.sort((t1: any, t2: any) => {
-        return 1;  
+      const sortedMessages = messages.sort((m, n) => {
+        let md: Date = new Date(m.timestamp);
+        let nd: Date = new Date(n.timestamp);
+        if (md > nd) {
+          return -1;
+        }
+        if (nd < md) {
+          return 1;
+        }
+        return 0;
       });
-      
+
       sortedMessages.forEach((msg) => {
         msg.polled = true,
         msg.save();
       });
 
-
+      return Bluebird.all(sortedMessages.map(thing => ElderHasCarer.findById(thing.elderhascarerId).then((connection: any) => {
+        const m = thing.toJSON();
+        let returnedMessage: any = {};
+          
+        returnedMessage.timestamp = m.timestamp;
+        returnedMessage.content = m.content;
+        returnedMessage.from = connection.toJSON().carerId;
+        return returnedMessage;
+      })));
+    }).then((messagesList) => {
       return {
-        messages: sortedMessages.map(thing => thing.toJSON()).sort((m, n) => {
-          let md: Date = new Date(m.timestamp);
-          let nd: Date = new Date(n.timestamp);
-          if (md > nd) {
-            return -1;
-          }
-          if (nd < md) {
-            return 1;
-          }
-          return 0;
-        }),
+        messages: messagesList,
       };
     });
   }
