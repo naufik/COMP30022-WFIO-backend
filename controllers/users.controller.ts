@@ -77,7 +77,7 @@ export default class UserController {
                         return Bluebird.all(connections.map(thing => {
                           return Carer.findById(thing.toJSON().carerId);  
                         })).then((clist) => {
-                            user.carerList = clist.map((c: any) => {
+                            user.carersList = clist.map((c: any) => {
                                 const car = c.toJSON();
                                 return {
                                     id: car.id,
@@ -99,7 +99,7 @@ export default class UserController {
                         return Bluebird.all(connections.map(thing => {
                             return Elder.findById(thing.toJSON().elderId);  
                           })).then((elist) => {
-                              user.elderList = elist.map((e: any) => {
+                              user.eldersList = elist.map((e: any) => {
                                   const eld = e.toJSON();
                                   return {
                                     id: eld.id,
