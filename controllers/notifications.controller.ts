@@ -36,7 +36,7 @@ export default class NotificationController {
         throw new Error("Cannot notify carers as a carer.");
       }
 
-      user.listCarers.forEach((carer) => {
+      user.carersList.forEach((carer) => {
         this.addNotification({
           to: carer.username,
           redirect: "sos.respond",
