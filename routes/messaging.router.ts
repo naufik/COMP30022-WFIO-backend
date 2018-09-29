@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import AuthController from '../controllers/auth.controller';
 import UserController from '../controllers/users.controller'
 import MessageController from '../controllers/messaging.controller';
+import NotificationController from '../controllers/notifications.controller';
 import { Action, Receipt, Token } from '../interfaces/action.interface';
 import * as Bluebird from 'bluebird';
 
@@ -39,7 +40,7 @@ MsgRouter.post('/', (req: Request, res: Response) => {
       });
       break;
     case "msg.sos":
-      returnedPromise = MessageController.notifyCarers(identity.email).then((success) => {
+      returnedPromise = NotificationController.notifyCarers(identity.email).then((success) => {
         return {
           ok: true,
           result: {}
