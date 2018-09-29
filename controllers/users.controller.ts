@@ -82,6 +82,7 @@ export default class UserController {
                                     id: car.id,
                                     fullname: car.fullname,
                                     username: car.username,
+                                    email: car.email,
                                 }
                             });
                             return user;
@@ -101,6 +102,7 @@ export default class UserController {
                                   const eld = e.toJSON();
                                   return {
                                     id: eld.id,
+                                    email: eld.email,
                                     fullname: eld.fullname,
                                     username: eld.username,
                                 }
