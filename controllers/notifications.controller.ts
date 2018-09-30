@@ -1,6 +1,6 @@
 import * as Bluebird from 'bluebird';
 import * as Socket from 'socket.io';
-import { Notification } from '../interfaces/notification.interface';
+import { Notification, SOSRequest } from '../interfaces/notification.interface';
 import UserController from './users.controller';
 import { User } from '../interfaces/user.interface';
 
@@ -28,23 +28,26 @@ export default class NotificationController {
     });
   }
 
-  public static notifyCarers(email: string): Bluebird<any> {
+  public static notifyCarers(email: string, dest: Location, route: Location[]): Bluebird<any> {
     return UserController.getUserByEmail(email).then((user: any) => {
       if (user.accountType === "CARER") {
         throw new Error("Cannot notify carers as a carer.");
       }
 
       user.carersList.forEach((carer) => {
-        this.addNotification({
-          to: carer.email,
-          redirect: "sos.respond",
-          content: {
-            from: {
-              fullname: user.fullname,
-              email: user.email,              
-            }
-          },
-        });
+        let notif: Notification<SOSRequest> = {
+            to: carer.email,
+            redirect: "sos.respond",
+            content: {
+              from: {
+                fullname: user.fullname,
+                email: user.email,              
+              },
+              destination: dest,
+              route: route,
+            },
+          }
+        this.addNotification(notif);
       });
 
       return Bluebird.resolve({

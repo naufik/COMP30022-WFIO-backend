@@ -7,8 +7,17 @@ export interface Notification<T> {
 
 export interface StandardMessage {
   from: {
-    fullName: string,
+    fullname: string,
     email: string,
   },
   message?: string,
+}
+
+export interface SOSRequest {
+  from: {
+    fullname: string,
+    email: string,
+  },
+  route: Location[],
+  destination: Location
 }
