@@ -1,7 +1,7 @@
 /** Standard Notification Interface */
 export interface Notification<T> {
   to: string,
-  redirect: "msg.view" | "sos.respond", 
+  redirect: "msg.view" | "sos.respond" | "sos.accepthelp", 
   content: T,
 }
 

@@ -47,6 +47,19 @@ MsgRouter.post('/', (req: Request, res: Response) => {
         };
       });
       break;
+    case "msg.sosaccept":
+      returnedPromise = NotificationController.addNotification({
+        to: params.elderEmail,
+        redirect: "sos.accepthelp",
+        content: {
+          from: identity.email,
+        }
+      }).then((success) => {
+        return {
+          ok: true,
+        }
+      });
+      break;
     default:
       res.send("action not found");
       break;
