@@ -48,12 +48,21 @@ MsgRouter.post('/', (req: Request, res: Response) => {
       });
       break;
     case "msg.sosaccept":
-      returnedPromise = NotificationController.addNotification({
-        to: params.elderEmail,
-        redirect: "sos.accepthelp",
-        content: {
-          from: identity.email,
-        }
+      returnedPromise = UserController.getUserByEmail(identity.email).then((user) =>{
+        return NotificationController.addNotification({
+          to: params.elderEmail,
+          redirect: "sos.accepthelp",
+          content: {
+            from: {
+              email: identity.email,
+              fullname: user.fullname,
+            },
+          },
+          display: {
+            title: "Carer Found!",
+            subtitle: user.fullname +" has agreed to help you!"
+          },
+        });
       }).then((success) => {
         return {
           ok: true,

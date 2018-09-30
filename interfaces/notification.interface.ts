@@ -3,6 +3,10 @@ export interface Notification<T> {
   to: string,
   redirect: "msg.view" | "sos.respond" | "sos.accepthelp", 
   content: T,
+  display: {
+    title: string,
+    subtitle: string,
+  }
 }
 
 export interface StandardMessage {

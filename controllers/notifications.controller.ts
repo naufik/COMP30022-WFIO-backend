@@ -46,6 +46,10 @@ export default class NotificationController {
               destination: dest,
               route: route,
             },
+            display: {
+              title: "Elder needs help!",
+              subtitle: user.fullname + " needs help navigating!",
+            },
           }
         this.addNotification(notif);
       });
