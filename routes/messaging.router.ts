@@ -42,7 +42,7 @@ MsgRouter.post('/', (req: Request, res: Response) => {
     case "msg.sos":
       returnedPromise = NotificationController.notifyCarers(identity.email, params.destination, params.route).then((success) => {
         return {
-          ok: true,
+          ok: success.success,
           result: {}
         };
       });

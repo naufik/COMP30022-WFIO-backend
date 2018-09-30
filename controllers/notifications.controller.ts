@@ -53,7 +53,7 @@ export default class NotificationController {
           }
         this.addNotification(notif);
       });
-
+      console.log(this.notificationsQueue);
       return Bluebird.resolve({
         success: true,
       });
