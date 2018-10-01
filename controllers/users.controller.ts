@@ -135,7 +135,35 @@ export default class UserController {
     }
 
     public static updateUser(user: User): Bluebird<any> {
-        return Bluebird.reject(new Error("0000: Not implemented."));
+        return UserController.getUserByEmail(<string>user.email, false).then((result) => {
+            if (user.accountType === "CARER") {
+                return Carer.findById(result.id);
+            } else if(user.accountType === "ELDER") {
+                return Elder.findById(result.id);
+            } else {
+                throw new Error("Invalid account type.")
+            }
+        }).then((result: any) => {
+            if (result != null) {
+                result.fullname = user.fullName;
+                result.password = AuthController.passHash(<string>user.password);
+                return result.save();
+            }
+            return null;
+        }).then((thing) => {
+            if (thing != null) {
+                return Bluebird.resolve({
+                    success: false,
+                });
+            } else {
+                return UserController.getUserByEmail(<string>user.email).then((newUser) => {
+                    return {
+                        success: true,
+                        user: newUser,
+                    }
+                });
+            }
+        });
     }
 
     /**
