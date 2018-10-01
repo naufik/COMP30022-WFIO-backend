@@ -136,16 +136,14 @@ export default class UserController {
 
     public static updateUser(user: User): Bluebird<any> {
         return UserController.getUserByEmail(<string>user.email, false).then((result) => {
-            console.log(result);
-            if (user.accountType === "CARER") {
+            if (result.accountType === "CARER") {
                 return Carer.findById(result.id);
-            } else if (user.accountType === "ELDER") {
+            } else if (result.accountType === "ELDER") {
                 return Elder.findById(result.id);
             } else {
                 throw new Error("Invalid account type.")
             }
         }).then((result: any) => {
-            console.log("kampuang nan jauh di mato");
             if (result != null) {
                 result.fullname = user.fullName;
                 result.password = AuthController.passHash(<string>user.password);
