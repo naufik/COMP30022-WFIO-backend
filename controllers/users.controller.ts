@@ -145,8 +145,12 @@ export default class UserController {
             }
         }).then((result: any) => {
             if (result != null) {
-                result.fullname = user.fullName;
-                result.password = AuthController.passHash(<string>user.password);
+                if (user.fullName) {
+                    result.fullname = user.fullName;
+                }
+                if (user.password) {
+                    result.password = AuthController.passHash(<string>user.password);
+                }
                 return result.save();
             }
             return null;
