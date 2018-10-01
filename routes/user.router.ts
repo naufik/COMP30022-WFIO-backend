@@ -93,6 +93,7 @@ UserRouter.post('/', (req: Request, res: Response) => {
             ok: false,
             result: err,
         }
+        res.json(rec);
     });
 });
 
@@ -119,11 +120,6 @@ RouterFunctions.signUp = (userDetails: NewUser): Bluebird<Receipt<Token>> => {
             return {
                 ok: true,
                 result: token,
-            }
-        }).catch((error) => {
-            return {
-                ok: false,
-                result: error,
             }
         });
     });
