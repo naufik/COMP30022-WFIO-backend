@@ -138,7 +138,7 @@ export default class UserController {
         return UserController.getUserByEmail(<string>user.email, false).then((result) => {
             if (user.accountType === "CARER") {
                 return Carer.findById(result.id);
-            } else if(user.accountType === "ELDER") {
+            } else if (user.accountType === "ELDER") {
                 return Elder.findById(result.id);
             } else {
                 throw new Error("Invalid account type.")
@@ -151,7 +151,7 @@ export default class UserController {
             }
             return null;
         }).then((thing) => {
-            if (thing != null) {
+            if (thing == null) {
                 return Bluebird.resolve({
                     success: false,
                 });
