@@ -156,7 +156,7 @@ export default class UserController {
                     success: false,
                 });
             } else {
-                return UserController.getUserByEmail(<string>user.email).then((newUser) => {
+                return UserController.getUserByEmail(<string>user.email, true).then((newUser) => {
                     return {
                         success: true,
                         user: newUser,
