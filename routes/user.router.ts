@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import AuthController from '../controllers/auth.controller';
 import UserController from '../controllers/users.controller'
 import { Action, Receipt, Token } from '../interfaces/action.interface';
-import { NewUser, Credentials } from '../interfaces/user.interface';
+import { NewUser, Credentials, User } from '../interfaces/user.interface';
 import * as Bluebird from 'bluebird';
 
 const UserRouter: Router = Router();
@@ -57,13 +57,29 @@ UserRouter.post('/', (req: Request, res: Response) => {
                 };
             });
             break;
-        case "user.deatils":
+        case "user.details":
             actionReceipt = UserController.getUserByEmail(req.body.identity.email, true).then((userInfo) => {
                 return {
                     ok: true,
                     result: userInfo
                 };
             });
+            break;
+        case "user.modify":
+            let par: User = <User> actionRequest.params ;
+            par.email = req.body.identity.email;
+
+            actionReceipt = UserController.updateUser(par).then((info) => {
+                let rec: any = {
+                    ok: info.success,
+                }
+
+                if (info.user) {
+                    rec.result = info.user;
+                }
+
+                return rec;
+            })
             break;
         default:
             actionReceipt = Bluebird.reject(new Error("Invalid Action"));
