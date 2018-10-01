@@ -120,6 +120,11 @@ RouterFunctions.signUp = (userDetails: NewUser): Bluebird<Receipt<Token>> => {
                 ok: true,
                 result: token,
             }
+        }).catch((error) => {
+            return {
+                ok: false,
+                result: error,
+            }
         });
     });
 };
