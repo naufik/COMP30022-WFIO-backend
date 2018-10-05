@@ -169,6 +169,7 @@ export default class UserController {
                                     }
                                 })
                             } else if (result.accountType === "CARER") {
+                                console.log(thing.toJSON().carerId);
                                 user.connections.forEach((elder) => {
                                     if (elder.id === thing.toJSON().elderId) {
                                         keep = true;
