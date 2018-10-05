@@ -9,6 +9,7 @@ import * as BodyParser from 'body-parser';
 import UserRouter from './routes/user.router';
 import MsgRouter from './routes/messaging.router';
 import NotifRouter from './routes/notification.router';
+import TwilioServer from './rtc/twilio';
 
 const app: Express.Application = Express();
 const credentials = {
@@ -22,6 +23,7 @@ app.use(BodyParser.json());
 app.use('/user', UserRouter);
 app.use('/msg', MsgRouter);
 app.use('/notif', NotifRouter);
+app.use('/tw', TwilioServer);
 
 app.get('/', (req, res) => {
     console.log("received new request");
@@ -32,6 +34,8 @@ app.get('/', (req, res) => {
         message: "Example response message",
     });
 });
+
+
 
 const server1 = HTTP.createServer(app).listen(80, () => {
     console.log("[http] HTTP Server Running");
