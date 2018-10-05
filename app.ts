@@ -23,7 +23,7 @@ app.use(BodyParser.json());
 app.use('/user', UserRouter);
 app.use('/msg', MsgRouter);
 app.use('/notif', NotifRouter);
-app.use('/tw', TwilioServer);
+app.use('/voice', TwilioServer);
 
 app.get('/', (req, res) => {
     console.log("received new request");
