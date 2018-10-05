@@ -158,6 +158,8 @@ export default class UserController {
                             : thing.id;
                         let cid = result.accountType === "ELDER" ? thing.id
                             : result.id;
+                        console.log(cid);
+                        console.log(eid);
                         return ElderHasCarer.findAll({
                             where: {
                                 elderId: eid,
