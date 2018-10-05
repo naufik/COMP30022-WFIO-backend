@@ -135,77 +135,71 @@ export default class UserController {
     }
 
     public static updateUser(user: User): Bluebird<any> {
-        return UserController.getUserByEmail(<string>user.email, false).then((result) => {
-            if (result.accountType === "CARER") {
-                return Carer.findById(result.id);
-            } else if (result.accountType === "ELDER") {
-                return Elder.findById(result.id);
-            } else {
-                throw new Error("Invalid account type.")
-            }
-        }).then((result: any) => {
-            if (result != null) {
-                if (user.fullName) {
-                    result.fullname = user.fullName;
-                }
-                if (user.password) {
-                    result.password = AuthController.passHash(<string>user.password);
-                }
-                if (user.connections) {
-                    let query: any = {};
-                    query[result.accountType === "ELDER" ? "elderId" 
-                        : "carerId"] = result.id;
-                    ElderHasCarer.findAll({
-                        where: query
-                    }).then((cnns) => {
-                        console.log(cnns);
-                        let remove: Bluebird<any>[] = [];
-                        cnns.forEach((thing: any) => {
-                            let keep: boolean = false;
-                            if (result.accountType === "ELDER") {
-                                user.connections.forEach((carer) => {
-                                    if (carer.id === thing.toJSON().carerId) {
-                                        keep = true;
-                                    }
-                                })
-                            } else if (result.accountType === "CARER") {
-                                console.log(thing.toJSON().carerId);
-                                user.connections.forEach((elder) => {
-                                    if (elder.id === thing.toJSON().elderId) {
-                                        keep = true;
-                                    }
-                                })
-                            }
+        return UserController.getUserByEmail(<string>user.email, false)
+            .then((result: any) => {
+                if (result != null) {
+                    if (user.fullName) {
+                        result.fullname = user.fullName;
+                    }
+                    if (user.password) {
+                        result.password = AuthController.passHash(<string>user.password);
+                    }
+                    if (user.connections) {
+                        let query: any = {};
+                        query[result.accountType === "ELDER" ? "elderId" 
+                            : "carerId"] = result.id;
+                        ElderHasCarer.findAll({
+                            where: query
+                        }).then((cnns) => {
+                            console.log(cnns);
+                            let remove: Bluebird<any>[] = [];
+                            cnns.forEach((thing: any) => {
+                                let keep: boolean = false;
+                                if (result.accountType === "ELDER") {
+                                    user.connections.forEach((carer) => {
+                                        if (carer.id === thing.toJSON().carerId) {
+                                            keep = true;
+                                        }
+                                    })
+                                } else if (result.accountType === "CARER") {
+                                    console.log(thing.toJSON().carerId);
+                                    user.connections.forEach((elder) => {
+                                        if (elder.id === thing.toJSON().elderId) {
+                                            keep = true;
+                                        }
+                                    })
+                                }
 
-                            if (!keep) {
-                                remove.push(ElderHasCarer.destroy({
-                                    where: {
-                                        id: thing.id,
-                                    }
-                                }));
-                            }
+                                if (!keep) {
+                                    remove.push(ElderHasCarer.destroy({
+                                        where: {
+                                            id: thing.id,
+                                        }
+                                    }));
+                                }
 
-                            return remove
+                                return remove
+                            });
                         });
+                    }
+                    return result.save();
+                }
+                return null;
+            }).then((thing) => {
+                if (thing == null) {
+                    return Bluebird.resolve({
+                        success: false,
+                    });
+                } else {
+                    return UserController.getUserByEmail(<string>user.email, true)
+                        .then((newUser) => {
+                            return {
+                                success: true,
+                                user: newUser,
+                            }
                     });
                 }
-                return result.save();
-            }
-            return null;
-        }).then((thing) => {
-            if (thing == null) {
-                return Bluebird.resolve({
-                    success: false,
-                });
-            } else {
-                return UserController.getUserByEmail(<string>user.email, true).then((newUser) => {
-                    return {
-                        success: true,
-                        user: newUser,
-                    }
-                });
-            }
-        });
+            });
     }
 
     /**
