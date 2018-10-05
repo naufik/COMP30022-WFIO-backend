@@ -151,6 +151,45 @@ export default class UserController {
                 if (user.password) {
                     result.password = AuthController.passHash(<string>user.password);
                 }
+                if (user.connections) {
+                    Bluebird.all(user.connections.map((thing) => {
+                        let eid = result.accountType === "ELDER" ? result.id
+                            : thing.id;
+                        let cid = result.accountType === "ELDER" ? thing.id
+                            : result.id;
+                        return ElderHasCarer.findAll({
+                            where: {
+                                elderId: eid,
+                                carerId: cid,
+                            }
+                        });
+                    })).then((cnns) => {
+                        let remove: Bluebird<any>[] = [];
+                        cnns.forEach((thing: any) => {
+                            let keep: boolean = false;
+                            if (result.accountType == "ELDER") {
+                                user.connections.forEach((carer) => {
+                                    if (carer.id === thing.carerId) {
+                                        keep = true;
+                                    }
+                                })
+                            } else if (result.accountType == "CARER") {
+                                user.connections.forEach((elder) => {
+                                    if (elder.id === thing.elderId) {
+                                        keep = true;
+                                    }
+                                })
+                            }
+                            if (!keep) {
+                                remove.push(ElderHasCarer.destroy({
+                                    where: {
+                                        id: thing.id,
+                                    }
+                                }));
+                            }
+                        });
+                    });
+                }
                 return result.save();
             }
             return null;
