@@ -162,19 +162,20 @@ export default class UserController {
                         let remove: Bluebird<any>[] = [];
                         cnns.forEach((thing: any) => {
                             let keep: boolean = false;
-                            if (result.accountType == "ELDER") {
+                            if (result.accountType === "ELDER") {
                                 user.connections.forEach((carer) => {
-                                    if (carer.id === thing.carerId) {
+                                    if (carer.id === thing.toJSON().carerId) {
                                         keep = true;
                                     }
                                 })
-                            } else if (result.accountType == "CARER") {
+                            } else if (result.accountType === "CARER") {
                                 user.connections.forEach((elder) => {
-                                    if (elder.id === thing.elderId) {
+                                    if (elder.id === thing.toJSON().elderId) {
                                         keep = true;
                                     }
                                 })
                             }
+
                             if (!keep) {
                                 remove.push(ElderHasCarer.destroy({
                                     where: {
