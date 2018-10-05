@@ -166,6 +166,7 @@ export default class UserController {
                     })).then((cnns) => {
                         let remove: Bluebird<any>[] = [];
                         cnns.forEach((thing: any) => {
+                            console.log(thing.id);
                             let keep: boolean = false;
                             if (result.accountType == "ELDER") {
                                 user.connections.forEach((carer) => {
@@ -187,6 +188,8 @@ export default class UserController {
                                     }
                                 }));
                             }
+
+                            return remove
                         });
                     });
                 }
