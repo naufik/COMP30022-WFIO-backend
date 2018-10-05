@@ -152,6 +152,7 @@ export default class UserController {
                     result.password = AuthController.passHash(<string>user.password);
                 }
                 if (user.connections) {
+                    console.log("here");
                     Bluebird.all(user.connections.map((thing) => {
                         let eid = result.accountType === "ELDER" ? result.id
                             : thing.id;
@@ -164,9 +165,9 @@ export default class UserController {
                             }
                         });
                     })).then((cnns) => {
+                        console.log(cnns);
                         let remove: Bluebird<any>[] = [];
                         cnns.forEach((thing: any) => {
-                            console.log(thing.id);
                             let keep: boolean = false;
                             if (result.accountType == "ELDER") {
                                 user.connections.forEach((carer) => {
