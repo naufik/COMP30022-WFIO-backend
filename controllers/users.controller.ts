@@ -152,21 +152,12 @@ export default class UserController {
                     result.password = AuthController.passHash(<string>user.password);
                 }
                 if (user.connections) {
-                    console.log("here");
-                    Bluebird.all(user.connections.map((thing) => {
-                        let eid = result.accountType === "ELDER" ? result.id
-                            : thing.id;
-                        let cid = result.accountType === "ELDER" ? thing.id
-                            : result.id;
-                        console.log(cid);
-                        console.log(eid);
-                        return ElderHasCarer.findAll({
-                            where: {
-                                elderId: eid,
-                                carerId: cid,
-                            }
-                        });
-                    })).then((cnns) => {
+                    let query: any = {};
+                    query[result.accountType === "ELDER" ? "elderId" 
+                        : "carerId"] = result.id;
+                    ElderHasCarer.findAll({
+                        where: query
+                    }).then((cnns) => {
                         console.log(cnns);
                         let remove: Bluebird<any>[] = [];
                         cnns.forEach((thing: any) => {
