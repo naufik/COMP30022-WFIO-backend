@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import AuthController from '../controllers/auth.controller';
 import UserController from '../controllers/users.controller'
 import MessageController from '../controllers/messaging.controller';
+import NotificationController from '../controllers/notifications.controller';
 import { Action, Receipt, Token } from '../interfaces/action.interface';
 import * as Bluebird from 'bluebird';
 
@@ -35,6 +36,36 @@ MsgRouter.post('/', (req: Request, res: Response) => {
         return {
           ok: true,
           result: messageEntry,
+        }
+      });
+      break;
+    case "msg.sos":
+      returnedPromise = NotificationController.notifyCarers(identity.email, params.destination, params.route).then((success) => {
+        return {
+          ok: success.success,
+          result: {}
+        };
+      });
+      break;
+    case "msg.sosaccept":
+      returnedPromise = UserController.getUserByEmail(identity.email).then((user) =>{
+        return NotificationController.addNotification({
+          to: params.elderEmail,
+          redirect: "sos.accepthelp",
+          content: {
+            from: {
+              email: identity.email,
+              fullname: user.fullname,
+            },
+          },
+          display: {
+            title: "Carer Found!",
+            subtitle: user.fullname +" has agreed to help you!"
+          },
+        });
+      }).then((success) => {
+        return {
+          ok: true,
         }
       });
       break;

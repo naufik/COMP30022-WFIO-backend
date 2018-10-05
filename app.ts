@@ -8,6 +8,7 @@ import * as Socket from 'socket.io';
 import * as BodyParser from 'body-parser';
 import UserRouter from './routes/user.router';
 import MsgRouter from './routes/messaging.router';
+import NotifRouter from './routes/notification.router';
 
 const app: Express.Application = Express();
 const credentials = {
@@ -20,6 +21,8 @@ app.use(BodyParser.json());
 
 app.use('/user', UserRouter);
 app.use('/msg', MsgRouter);
+app.use('/notif', NotifRouter);
+
 app.get('/', (req, res) => {
     console.log("received new request");
     res.json({
@@ -45,3 +48,13 @@ const server3 = HTTPS.createServer(credentials, app).listen(443, () => {
 const io1 = Socket(server1);
 const io2 = Socket(server2);
 const io3 = Socket(server3);
+
+[io1, io2, io3].map((thing) => {
+    thing.on('connect', (socket: Socket.Socket) => {
+        console.log("someone connected");
+    });
+
+    thing.on('disconnect', (socket: Socket.Socket) => {
+        console.log("someone disconnected");
+    });
+})
