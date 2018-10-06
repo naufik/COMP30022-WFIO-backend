@@ -3,7 +3,7 @@ require('dotenv').load();
 const AccessToken = require('twilio').jwt.AccessToken;
 const VoiceGrant = AccessToken.VoiceGrant;
 const VoiceResponse = require('twilio').twiml.VoiceResponse;
-const defaultIdentity = 'alice';
+const defaultIdentity = 'bob';
 const callerId = 'client:quick_start';
 // Use a valid Twilio number by adding to your account via https://www.twilio.com/console/phone-numbers/verified
 const callerNumber = '61240584749';
