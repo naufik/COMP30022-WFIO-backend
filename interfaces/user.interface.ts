@@ -9,6 +9,7 @@ export interface User {
     password?: string,
     fullName?: string,
     accountType?: "ELDER" | "CARER",
+    connections: User[],
     content?: ElderData | CarerData, 
 }
 
