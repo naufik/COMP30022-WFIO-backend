@@ -1,6 +1,7 @@
 /** Standard Notification Interface */
 export interface Notification<T> {
   to: string,
+  timestamp: Date,
   redirect: "msg.view" | "sos.respond", 
   content: T,
 }
