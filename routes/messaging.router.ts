@@ -52,6 +52,7 @@ MsgRouter.post('/', (req: Request, res: Response) => {
         return NotificationController.addNotification({
           to: params.elderEmail,
           redirect: "sos.accepthelp",
+          timestamp: new Date(),
           content: {
             from: {
               email: identity.email,

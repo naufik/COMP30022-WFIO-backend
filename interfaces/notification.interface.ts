@@ -2,7 +2,7 @@
 export interface Notification<T> {
   to: string,
   timestamp: Date,
-  redirect: "msg.view" | "sos.respond", 
+  redirect: "msg.view" | "sos.respond" | "sos.accepthelp", 
   content: T,
   display: {
     title: string,
