@@ -18,6 +18,7 @@ export default class NotificationController {
   }
 
   public static pollNotifications(email: string): Bluebird<any> {
+    this.cleanNotifications();
     return new Bluebird((resolve, reject) => {
       resolve({
         notifications: this.notificationsQueue.filter(thing => thing.to === email)
@@ -37,6 +38,7 @@ export default class NotificationController {
       user.carersList.forEach((carer) => {
         let notif: Notification<SOSRequest> = {
             to: carer.email,
+            timestamp: new Date(),
             redirect: "sos.respond",
             content: {
               from: {
@@ -52,11 +54,20 @@ export default class NotificationController {
             },
           }
         this.addNotification(notif);
+        console.log(this.notificationsQueue);
       });
       console.log(this.notificationsQueue);
       return Bluebird.resolve({
         success: true,
       });
+    });
+  }
+
+  private static cleanNotifications() {
+    this.notificationsQueue = this.notificationsQueue.filter((thing) => {
+      let d30mins = new Date(thing.timestamp.toDateString());
+      d30mins.setMinutes(d30mins.getMinutes() + 30);
+      return new Date() > d30mins;
     });
   }
 

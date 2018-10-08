@@ -52,11 +52,14 @@ MsgRouter.post('/', (req: Request, res: Response) => {
         return NotificationController.addNotification({
           to: params.elderEmail,
           redirect: "sos.accepthelp",
+          timestamp: new Date(),
           content: {
             from: {
               email: identity.email,
               fullname: user.fullname,
             },
+            route: params.route,
+            destination: params.destination,
           },
           display: {
             title: "Carer Found!",

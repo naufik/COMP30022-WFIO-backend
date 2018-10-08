@@ -22,6 +22,8 @@
     "@types/express": "^4.16.0",
     "@types/sequelize": "^4.27.24",
     "bluebird": "^3.5.1",
+    "twilio": "^3.0.0",
+    "dotenv": "^4.0.0",
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
     "express": "^4.16.3",
@@ -29,6 +31,7 @@
     "pg": "^7.4.3",
     "sequelize": "^4.38.0",
     "socket.io": "^2.1.1",
+    "graceful-fs": "^4.1.11",
     "typescript": "^3.0.1"
   },
   "devDependencies": {
@@ -37,6 +40,7 @@
     "@types/graceful-fs": "^4.1.2",
     "@types/node-rsa": "^0.4.3",
     "@types/socket.io": "^1.4.38",
-    "graceful-fs": "^4.1.11"
+    "jest": "^19.0.2",
+    "jsonwebtoken": "^7.4.0"
   }
 }

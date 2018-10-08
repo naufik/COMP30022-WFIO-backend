@@ -156,7 +156,7 @@ export default class AuthController {
 			}
 		})]).spread((elderFound: any, carerFound: any) => {
 			if (elderFound == null && carerFound == null) {
-				return Bluebird.reject("Error 5000: Cannot Find Account");
+				throw new Error("Error 5000: Cannot Find Account");
 			}
 			
 			const userFound = (elderFound != null) ? elderFound : carerFound;

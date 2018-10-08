@@ -7,7 +7,9 @@ export interface User {
     username?: string,
     email?: string,
     password?: string,
+    fullName?: string,
     accountType?: "ELDER" | "CARER",
+    connections: User[],
     content?: ElderData | CarerData, 
 }
 
