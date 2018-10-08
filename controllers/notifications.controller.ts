@@ -67,7 +67,7 @@ export default class NotificationController {
     this.notificationsQueue = this.notificationsQueue.filter((thing) => {
       let d30mins = new Date(thing.timestamp.toDateString());
       d30mins.setMinutes(d30mins.getMinutes() + 30);
-      return new Date() < d30mins;
+      return new Date() > d30mins;
     });
   }
 
