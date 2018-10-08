@@ -1,7 +1,8 @@
 /** Standard Notification Interface */
 export interface Notification<T> {
   to: string,
-  redirect: "msg.view" | "sos.respond" | "sos.accepthelp", 
+  timestamp: Date,
+  redirect: "msg.view" | "sos.respond", 
   content: T,
   display: {
     title: string,
