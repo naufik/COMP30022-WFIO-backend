@@ -165,10 +165,9 @@ export default class UserController {
                     if ((<any>user).favorites) {
                         let userfavs: any[] = (<any>user).favorites
                             .map(thing => thing.id);
-                        console.log((<any>user).favorites);
                         Favorites.findAll({
                             where: {
-                                elderId: user.id,
+                                elderId: result.id,
                             }
                         }).then((favs) => {
                             favs.forEach((fav: any) => {
