@@ -122,7 +122,7 @@ export default class UserController {
             }              
         }).then((userInfo) => {
             const user = userInfo;
-            user.accountType = (userInfo.favorites ? "ELDER" : "CARER");
+            user.accountType = (userInfo.favorites != undefined ? "ELDER" : "CARER");
             return userInfo;
         });
 
@@ -163,6 +163,7 @@ export default class UserController {
                         });
                     }
                     if ((<any>user).favorites) {
+                        console.log((<any>user).favorites);
                         let userfavs: any[] = (<any>user).favorites
                             .map(thing => thing.id);
                         Favorites.findAll({
