@@ -149,7 +149,7 @@ export default class UserController {
                             fullname: user.fullName,
                         }, {
                             where: {
-                                email: result.email,
+                                email: <string>user.email,
                             }
                         }).spread((n, rows) => {
                             console.log(n);
@@ -160,7 +160,7 @@ export default class UserController {
                             password: AuthController.passHash(user.password),
                         }, {
                             where: {
-                                email: result.email,
+                                email: <string>user.email,
                             }
                         });
                         console.log("this happened too");
