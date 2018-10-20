@@ -195,8 +195,7 @@ export default class UserController {
                                         }
                                     }));
                                 }
-
-                                return remove
+                                return remove;
                             });
                         });
                     }
@@ -286,6 +285,22 @@ export default class UserController {
                     code: linkNumber,
                 } 
             });
+        });
+    }
+
+    public static addNewFavorite(email: string, loc: { name: string, point: any }) {
+        return UserController.getUserByEmail(email).then((thing) => {
+            return Favorites.create({
+                elderId: thing.id,
+                name: loc.name,
+                location: {
+                    type: "Point",
+                    coordinates: [thing.loc.lat,
+                        thing.loc.long]
+                }
+            });
+        }).then((newPoint: any) => {
+           return newPoint.toJSON(); 
         });
     }
 }
