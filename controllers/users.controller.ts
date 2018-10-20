@@ -162,6 +162,27 @@ export default class UserController {
                             }
                         });
                     }
+                    if ((<any>user).favorites) {
+                        let userfavs: any[] = (<any>user).favorites
+                            .map(thing => thing.id);
+                        Favorites.findAll({
+                            where: {
+                                elderId: user.id,
+                            }
+                        }).then((favs) => {
+                            favs.forEach((fav: any) => {
+                                let keep: boolean = false;
+                                userfavs.forEach(t => {
+                                    if (t === fav.id) {
+                                        keep = true;
+                                    }
+                                });
+                                if (!keep) {
+                                    fav.destroy();
+                                }
+                            });
+                        })
+                    }
                     if (user.connections) {
                         let query: any = {};
                         query[result.accountType === "ELDER" ? "elderId" 
