@@ -33,6 +33,11 @@ export default class UserController {
         return returnedPromise;
     }
 
+    /**
+     * 
+     * @param email 
+     * @param clean 
+     */
     public static getUserByEmail(email: string, clean: boolean = false): Bluebird<any | null> {
         const data = Bluebird.all([
             Elder.findOne({
@@ -138,11 +143,24 @@ export default class UserController {
         return UserController.getUserByEmail(<string>user.email, false)
             .then((result: any) => {
                 if (result != null) {
+                    let table = user.accountType === "ELDER" ? Elder : Carer;
                     if (user.fullName) {
-                        result.fullname = user.fullName;
+                        table.update({
+                            fullname: user.fullName,
+                        }, {
+                            where: {
+                                id: result.id,
+                            }
+                        });
                     }
                     if (user.password) {
-                        result.password = AuthController.passHash(<string>user.password);
+                        table.update({
+                            password: AuthController.passHash(user.password),
+                        }, {
+                            where: {
+                                id: result.id,
+                            }
+                        });
                     }
                     if (user.connections) {
                         let query: any = {};
@@ -182,7 +200,6 @@ export default class UserController {
                             });
                         });
                     }
-                    return result.save();
                 }
                 return null;
             }).then((thing) => {
