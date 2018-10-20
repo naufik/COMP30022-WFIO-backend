@@ -190,7 +190,6 @@ export default class UserController {
                         ElderHasCarer.findAll({
                             where: query
                         }).then((cnns) => {
-                            console.log(cnns);
                             let remove: Bluebird<any>[] = [];
                             cnns.forEach((thing: any) => {
                                 let keep: boolean = false;
@@ -201,7 +200,6 @@ export default class UserController {
                                         }
                                     })
                                 } else if (result.accountType === "CARER") {
-                                    console.log(thing.toJSON().carerId);
                                     user.connections.forEach((elder) => {
                                         if (elder.id === thing.toJSON().elderId) {
                                             keep = true;
