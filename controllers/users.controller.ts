@@ -152,6 +152,7 @@ export default class UserController {
                                 email: result.email,
                             }
                         });
+                        console.log("this happens");
                     }
                     if (user.password) {
                         table.update({
@@ -161,6 +162,7 @@ export default class UserController {
                                 email: result.email,
                             }
                         });
+                        console.log("this happened too");
                     }
                     if (user.connections) {
                         let query: any = {};
