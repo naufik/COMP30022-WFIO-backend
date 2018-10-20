@@ -33,6 +33,11 @@ export default class UserController {
         return returnedPromise;
     }
 
+    /**
+     * 
+     * @param email 
+     * @param clean 
+     */
     public static getUserByEmail(email: string, clean: boolean = false): Bluebird<any | null> {
         const data = Bluebird.all([
             Elder.findOne({
@@ -117,7 +122,7 @@ export default class UserController {
             }              
         }).then((userInfo) => {
             const user = userInfo;
-            user.accountType = (userInfo.favorites ? "ELDER" : "CARER");
+            user.accountType = (userInfo.favorites != undefined ? "ELDER" : "CARER");
             return userInfo;
         });
 
@@ -138,11 +143,45 @@ export default class UserController {
         return UserController.getUserByEmail(<string>user.email, false)
             .then((result: any) => {
                 if (result != null) {
+                    let table = result.accountType === "ELDER" ? Elder : Carer;
                     if (user.fullName) {
-                        result.fullname = user.fullName;
+                        table.update({
+                            fullname: user.fullName,
+                        }, {
+                            where: {
+                                id: result.id,
+                            }
+                        });
                     }
                     if (user.password) {
-                        result.password = AuthController.passHash(<string>user.password);
+                        table.update({
+                            password: AuthController.passHash(user.password),
+                        }, {
+                            where: {
+                                id: result.id,
+                            }
+                        });
+                    }
+                    if ((<any>user).favorites) {
+                        let userfavs: any[] = (<any>user).favorites
+                            .map(thing => thing.id);
+                        Favorites.findAll({
+                            where: {
+                                elderId: result.id,
+                            }
+                        }).then((favs) => {
+                            favs.forEach((fav: any) => {
+                                let keep: boolean = false;
+                                userfavs.forEach(t => {
+                                    if (t === fav.id) {
+                                        keep = true;
+                                    }
+                                });
+                                if (!keep) {
+                                    fav.destroy();
+                                }
+                            });
+                        })
                     }
                     if (user.connections) {
                         let query: any = {};
@@ -151,7 +190,6 @@ export default class UserController {
                         ElderHasCarer.findAll({
                             where: query
                         }).then((cnns) => {
-                            console.log(cnns);
                             let remove: Bluebird<any>[] = [];
                             cnns.forEach((thing: any) => {
                                 let keep: boolean = false;
@@ -162,7 +200,6 @@ export default class UserController {
                                         }
                                     })
                                 } else if (result.accountType === "CARER") {
-                                    console.log(thing.toJSON().carerId);
                                     user.connections.forEach((elder) => {
                                         if (elder.id === thing.toJSON().elderId) {
                                             keep = true;
@@ -177,12 +214,10 @@ export default class UserController {
                                         }
                                     }));
                                 }
-
-                                return remove
+                                return remove;
                             });
                         });
                     }
-                    return result.save();
                 }
                 return null;
             }).then((thing) => {
@@ -269,6 +304,22 @@ export default class UserController {
                     code: linkNumber,
                 } 
             });
+        });
+    }
+
+    public static addNewFavorite(email: string, loc: { name: string, point: any }) {
+        return UserController.getUserByEmail(email).then((thing) => {
+            return Favorites.create({
+                elderId: thing.id,
+                name: loc.name,
+                location: {
+                    type: "Point",
+                    coordinates: [loc.point.lat,
+                        loc.point.long]
+                }
+            });
+        }).then((newPoint: any) => {
+           return newPoint.toJSON(); 
         });
     }
 }

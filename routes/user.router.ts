@@ -81,6 +81,10 @@ UserRouter.post('/', (req: Request, res: Response) => {
                 return rec;
             })
             break;
+        case "user.addfav":
+            actionReceipt = RouterFunctions.addFavorites(req.body.identity.email,
+                actionRequest.params);
+        break;
         default:
             actionReceipt = Bluebird.reject(new Error("Invalid Action"));
             break;
@@ -122,6 +126,15 @@ RouterFunctions.signUp = (userDetails: NewUser): Bluebird<Receipt<Token>> => {
                 result: token,
             }
         });
+    });
+};
+
+RouterFunctions.addFavorites = (email: string, newLocation: any) => {
+    return UserController.addNewFavorite(email, newLocation).then((loc) => {
+        return {
+            ok: true,
+            result: loc,
+        }
     });
 };
 
