@@ -144,7 +144,8 @@ export default class UserController {
             .then((result: any) => {
                 if (result != null) {
                     console.log(result.id);
-                    let table = user.accountType == "ELDER" ? Elder : Carer;
+                    let table = (user.accountType == "ELDER") ? Elder : Carer;
+                    console.log(table);
                     if (user.fullName) {
                         table.findById(result.id).then((instance: any) => {
                             console.log(user.fullName);
