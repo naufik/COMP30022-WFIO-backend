@@ -143,20 +143,23 @@ export default class UserController {
         return UserController.getUserByEmail(<string>user.email, false)
             .then((result: any) => {
                 if (result != null) {
-                    console.log(result.id);
-                    let table = (user.accountType == "ELDER") ? Elder : Carer;
-                    console.log(table);
+                    let table = result.accountType === "ELDER" ? Elder : Carer;
                     if (user.fullName) {
-                        table.findById(result.id).then((instance: any) => {
-                            console.log(user.fullName);
-                            instance.fullname = user.fullName;
-                            instance.save();
+                        table.update({
+                            fullname: user.fullName,
+                        }, {
+                            where: {
+                                id: result.id,
+                            }
                         });
                     }
                     if (user.password) {
-                        table.findById(result.id).then((instance: any) => {
-                            instance.password = AuthController.passHash(<string>user.password);
-                            instance.save();
+                        table.update({
+                            password: AuthController.passHash(user.password),
+                        }, {
+                            where: {
+                                id: result.id,
+                            }
                         });
                     }
                     if (user.connections) {
