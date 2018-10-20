@@ -151,8 +151,9 @@ export default class UserController {
                             where: {
                                 email: result.email,
                             }
-                        });
-                        console.log("this happens");
+                        }).spread((n, rows) => {
+                            console.log(n);
+                        })
                     }
                     if (user.password) {
                         table.update({
