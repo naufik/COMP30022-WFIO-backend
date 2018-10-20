@@ -295,8 +295,8 @@ export default class UserController {
                 name: loc.name,
                 location: {
                     type: "Point",
-                    coordinates: [thing.loc.lat,
-                        thing.loc.long]
+                    coordinates: [loc.point.lat,
+                        loc.point.long]
                 }
             });
         }).then((newPoint: any) => {
