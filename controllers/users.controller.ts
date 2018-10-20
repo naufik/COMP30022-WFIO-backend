@@ -149,7 +149,7 @@ export default class UserController {
                             fullname: user.fullName,
                         }, {
                             where: {
-                                id: result.id,
+                                email: result.email,
                             }
                         });
                     }
@@ -158,7 +158,7 @@ export default class UserController {
                             password: AuthController.passHash(user.password),
                         }, {
                             where: {
-                                id: result.id,
+                                email: result.email,
                             }
                         });
                     }
