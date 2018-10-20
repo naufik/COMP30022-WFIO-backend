@@ -147,6 +147,7 @@ export default class UserController {
                     let table = user.accountType == "ELDER" ? Elder : Carer;
                     if (user.fullName) {
                         table.findById(result.id).then((instance: any) => {
+                            console.log(user.fullName);
                             instance.fullname = user.fullName;
                             instance.save();
                         });
