@@ -116,11 +116,11 @@ export default class AuthController {
 					userDH.setPrivateKey(tokenId, "hex");
 					userDH.setPublicKey(tokenThing.token, "hex");
 					
-					let lhs = userDH.computeSecret(serverDH.getPublicKey());
-					let rhs = serverDH.computeSecret(userDH.getPublicKey());
+					let lhs = userDH.computeSecret(serverDH.getPublicKey()).join("");
+					let rhs = serverDH.computeSecret(userDH.getPublicKey()).join("");
 					console.log(rhs);
 					console.log(lhs);
-					verificationDone = lhs == rhs;
+					verificationDone = lhs === rhs;
 				}
 
 				if (!verificationDone) {
