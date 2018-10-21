@@ -91,15 +91,15 @@ export default class AuthController {
 		serverDH.setPublicKey(pubK, "hex");
 
 		return UserController.getUserByEmail(userEmail)
-			.then((value: {user: any, kind: string}) => {
+			.then((value) => {
 				if (value != null) {
-					if (value.kind == "ELDER") {
+					if (value.accountType == "ELDER") {
 						return ElderToken.findOne({
 							where: {
 								elderId: value.user.id
 							}
 						});
-					} else if (value.kind == "CARER") {
+					} else if (value.accountType == "CARER") {
 						return CarerToken.findOne({
 							where: {
 								carerId: value.user.id
