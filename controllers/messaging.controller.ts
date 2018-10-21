@@ -11,15 +11,27 @@ import * as Bluebird from 'bluebird';
 
 export default class MessagingController {
 
+  /**
+   * Handles sending a mesage from a party to another.
+   * @param identity the user that sends the message.
+   * @param params the parameters, including the message content and the recipient.
+   * Refer to the interfaces document for more details.
+   */
   public static sendMessage(identity: string, params: any) {
-    return UserController.getUserByEmail(identity).then((user) => {
+    return UserController.getUserByEmail(identity, false).then((user) => {
+      if (user == null) {
+        return Bluebird.reject(new Error("null user"));
+      }
       return Connection.findOne({
         where: {
-          carerId: user.id,
-          elderId: params.recipient,
+          carerId: user.accountType === "ELDER" ? params.recipient : user.id,
+          elderId: user.accountType === "ELDER" ? user.id : params.recipient,
         }
       });
     }).then((connection: any) => {
+      if (connection == null) {
+        return Bluebird.reject(new Error("Elder not being connected to that carer"));
+      }
       let poly: any = null;
       if (params.location) {
         poly = { type: 'Point', 
@@ -41,7 +53,12 @@ export default class MessagingController {
     });
   }
 
-  public static pollMessages(identity: string, params: any) {
+  /**
+   * Handles polling messages for a party, that is, obtain the latest messages
+   * that hasn't been polled yet. Returns a promise.
+   * @param identity The user who is polling the message.
+   */
+  public static pollMessages(identity: string) {
     return UserController.getUserByEmail(identity).then((user: User) => {
       const type = user.accountType;
       

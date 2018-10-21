@@ -38,16 +38,15 @@ UserRouter.post('/', (req: Request, res: Response) => {
             actionReceipt = RouterFunctions.login(actionRequest.params);
             break;
         case "user.genlink":
-            // actionReceipt = AuthController.authenticate(req.body.identity.email, req.body.identity.token).then((auth) => {
-                // if (auth.verified) {
-                    actionReceipt =  RouterFunctions.getLinkCode(req.body.identity.email);
-                // } else {
-                    // return Bluebird.reject("403: Forbidden Access");
-                // }
-            // });
+            actionReceipt = AuthController.authenticate(req.body.identity.email, req.body.identity.token).then((auth) => {
+                    return RouterFunctions.getLinkCode(req.body.identity.email);
+                 });
             break;
         case "user.link":
-            actionReceipt = RouterFunctions.linkElder(req.body.identity.email, actionRequest.params);
+            actionReceipt = AuthController.authenticate(req.body.identity.email, req.body.identity.token).then((auth) => {
+                return RouterFunctions.linkElder(req.body.identity.email, actionRequest.params);
+                }
+            )
             break;
         case "user.authtest":
             actionReceipt = AuthController.authenticate(req.body.identity.email, req.body.identity.token).then((auth) => {
@@ -58,33 +57,40 @@ UserRouter.post('/', (req: Request, res: Response) => {
             });
             break;
         case "user.details":
-            actionReceipt = UserController.getUserByEmail(req.body.identity.email, true).then((userInfo) => {
-                return {
-                    ok: true,
-                    result: userInfo
-                };
+            actionReceipt = AuthController.authenticate(req.body.identity.email, req.body.identity.token).then(() => {
+                return UserController.getUserByEmail(req.body.identity.email, true).then((userInfo) => {
+                    return {
+                        ok: true,
+                        result: userInfo
+                    };
+                });
             });
             break;
         case "user.modify":
             let par: User = <User> actionRequest.params ;
             par.email = req.body.identity.email;
 
-            actionReceipt = UserController.updateUser(par).then((info) => {
-                let rec: any = {
-                    ok: info.success,
-                }
+            actionReceipt = 
+            AuthController.authenticate(req.body.identity.email, req.body.identity.token).then((auth) => {
+                return UserController.updateUser(par).then((info) => {
+                    let rec: any = {
+                        ok: info.success,
+                    }
 
-                if (info.user) {
-                    rec.result = info.user;
-                }
+                    if (info.user) {
+                        rec.result = info.user;
+                    }
 
-                return rec;
-            })
+                    return rec;
+                });
+            });
             break;
         case "user.addfav":
-            actionReceipt = RouterFunctions.addFavorites(req.body.identity.email,
-                actionRequest.params);
+            actionReceipt = AuthController.authenticate(req.body.identity.email, req.body.identity.token).then((auth) => {
+                return RouterFunctions.addFavorites(req.body.identity.email, actionRequest.params);
+            });
         break;
+        
         default:
             actionReceipt = Bluebird.reject(new Error("Invalid Action"));
             break;
@@ -95,7 +101,7 @@ UserRouter.post('/', (req: Request, res: Response) => {
     }).catch((err: Error) => {
         let rec: Receipt<any> = {
             ok: false,
-            result: err,
+            result: err.message,
         }
         res.json(rec);
     });

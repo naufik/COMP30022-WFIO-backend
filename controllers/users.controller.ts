@@ -9,6 +9,10 @@ import AuthController from './auth.controller';
 import { NewUser, User } from '../interfaces/user.interface';
 
 export default class UserController {
+    /**
+     * Creates a new user object in the database.
+     * @param user The user object to be created.
+     */
     public static createUser(user: NewUser): Bluebird<any> {
         let returnedPromise: Bluebird<any>;
 
@@ -34,9 +38,10 @@ export default class UserController {
     }
 
     /**
-     * 
-     * @param email 
-     * @param clean 
+     * Obtains the user data of a single user in the database.
+     * @param email The email of the user to be obtained.
+     * @param clean if true, a clean JSON data will be resolved. if false, this
+     * will resolve to the raw Sequelize instance.
      */
     public static getUserByEmail(email: string, clean: boolean = false): Bluebird<any | null> {
         const data = Bluebird.all([
@@ -139,6 +144,12 @@ export default class UserController {
         });
     }
 
+    /**
+     * Updates the data of a user, that is, given a user data, synchronizes it
+     * to the database, using changes. Will reject if the user does not exist
+     * yet, where in such cases createUser should be used.
+     * @param user The user data to be synchronized to the database.
+     */
     public static updateUser(user: User): Bluebird<any> {
         return UserController.getUserByEmail(<string>user.email, false)
             .then((result: any) => {
@@ -238,9 +249,10 @@ export default class UserController {
     }
 
     /**
-     * Methods to link a carer and an elder.
+     * Links two users, an elder and a carer.
+     * @param id A JSON object containing two numeric ids, one for the "elder"
+     * and one for the "carer".
      */
-
     public static linkUsers(id: {elder: string | number, carer: string | number}) {
         ElderHasCarer.findOrCreate({
             where: {
@@ -278,6 +290,13 @@ export default class UserController {
         return returnedPromise;
     }
 
+    /**
+     * Looks up a link-code in the database and resolves it to a specific Elder,
+     * this will then link the carer and the elder associated by the ID number.
+     * 
+     * @param carerId The ID number of the carer
+     * @param linkNumber The link code generated to be looked up.
+     */
     public static acceptLink(carerId: string, linkNumber: string) {
         return TwoFactorCode.findOne({
             where: {
@@ -307,6 +326,13 @@ export default class UserController {
         });
     }
 
+    /**
+     * Adds a new favorite location into an Elder's database of locations.
+     * 
+     * Will fail if email belongs to an elder.
+     * @param email The email of the elder to be input.
+     * @param loc The location to be stored.
+     */
     public static addNewFavorite(email: string, loc: { name: string, point: any }) {
         return UserController.getUserByEmail(email).then((thing) => {
             return Favorites.create({

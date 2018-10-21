@@ -34,12 +34,12 @@ export default class AuthController {
 	 * @param user The user to generate the token to.
 	 */
 	private static generateToken(user: { id: string, kind: "ELDER" | "CARER" }): Bluebird<string> {
-		const sdH = Crypto.createDiffieHellman(60);
+		const sdH = Crypto.createDiffieHellman(_authconfig.serverPrime, "hex");
 		sdH.setPrivateKey(_authconfig.serverPrivate, "hex");
 		sdH.setPublicKey(_authconfig.serverPublic, "hex");
 		
 		const dH = Crypto.createDiffieHellman(sdH.getPrime());
-		dH.generateKeys("base64");
+		dH.generateKeys("hex");
 		const publicKey = dH.getPublicKey("hex");
 		const privateKey = dH.getPrivateKey("hex");
 
@@ -69,6 +69,7 @@ export default class AuthController {
 		
 		return tokenPromise.spread((tokenObj: any, created: boolean) => {
 			if (!created) { 
+				console.log(tokenObj);
 				tokenObj.token = publicKey
 				return tokenObj.save();
 			}
@@ -80,30 +81,30 @@ export default class AuthController {
 	/**
 	 * Authenticates the user to perform a specific action, such that the action can
 	 * be carried out.
-	 * @todo FINISH THIS METHOD
-	 * @param tokenId 
+	 * @param tokenId the token string to be authenticated.
 	 */
 	public static authenticate(userEmail: string, tokenId: string): Bluebird<{ verified: boolean, token: Token }> {
 		const pubK = _authconfig.serverPublic;
 		const prvK = _authconfig.serverPrivate;
-		const serverDH = Crypto.createDiffieHellman(60);
+		const prime = _authconfig.serverPrime;
+		const serverDH = Crypto.createDiffieHellman(prime, "hex");
 		
 		serverDH.setPrivateKey(prvK, "hex");
 		serverDH.setPublicKey(pubK, "hex");
 
-		return UserController.getUserByEmail(userEmail)
-			.then((value: {user: any, kind: string}) => {
+		return UserController.getUserByEmail(userEmail, false)
+			.then((value) => {
 				if (value != null) {
-					if (value.kind == "ELDER") {
+					if (value.accountType == "ELDER") {
 						return ElderToken.findOne({
 							where: {
-								elderId: value.user.id
+								elderId: value.id
 							}
 						});
-					} else if (value.kind == "CARER") {
+					} else if (value.accountType == "CARER") {
 						return CarerToken.findOne({
 							where: {
-								carerId: value.user.id
+								carerId: value.id
 							}
 						});
 					}
@@ -112,14 +113,16 @@ export default class AuthController {
 			}).then((tokenThing:any) => {
 				let verificationDone: boolean = false;
 				if (tokenThing != null) {
-					const userDH = Crypto.createDiffieHellman(60);
+					const userDH = Crypto.createDiffieHellman(serverDH.getPrime());
 
 					userDH.setPrivateKey(tokenId, "hex");
 					userDH.setPublicKey(tokenThing.token, "hex");
 					
-					let lhs = userDH.computeSecret(serverDH.getPublicKey());
-					let rhs = serverDH.computeSecret(userDH.getPublicKey());
-					verificationDone = lhs == rhs;
+					let lhs = userDH.computeSecret(serverDH.getPublicKey()).join("");
+					let rhs = serverDH.computeSecret(userDH.getPublicKey()).join("");
+					console.log(rhs);
+					console.log(lhs);
+					verificationDone = lhs === rhs;
 				}
 
 				if (!verificationDone) {
