@@ -19,6 +19,9 @@ export default class MessagingController {
    */
   public static sendMessage(identity: string, params: any) {
     return UserController.getUserByEmail(identity).then((user) => {
+      if (user == null) {
+        Bluebird.reject(new Error("null user"));
+      }
       return Connection.findOne({
         where: {
           carerId: user.id,
