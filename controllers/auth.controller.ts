@@ -34,7 +34,7 @@ export default class AuthController {
 	 * @param user The user to generate the token to.
 	 */
 	private static generateToken(user: { id: string, kind: "ELDER" | "CARER" }): Bluebird<string> {
-		const sdH = Crypto.createDiffieHellman(60);
+		const sdH = Crypto.createDiffieHellman(_authconfig.serverPrime, "hex");
 		sdH.setPrivateKey(_authconfig.serverPrivate, "hex");
 		sdH.setPublicKey(_authconfig.serverPublic, "hex");
 		
@@ -86,7 +86,8 @@ export default class AuthController {
 	public static authenticate(userEmail: string, tokenId: string): Bluebird<{ verified: boolean, token: Token }> {
 		const pubK = _authconfig.serverPublic;
 		const prvK = _authconfig.serverPrivate;
-		const serverDH = Crypto.createDiffieHellman(60);
+		const prime = _authconfig.serverPrime;
+		const serverDH = Crypto.createDiffieHellman(prime, "hex");
 		
 		serverDH.setPrivateKey(prvK, "hex");
 		serverDH.setPublicKey(pubK, "hex");
