@@ -69,6 +69,7 @@ export default class AuthController {
 		
 		return tokenPromise.spread((tokenObj: any, created: boolean) => {
 			if (!created) { 
+				console.log(tokenObj);
 				tokenObj.token = publicKey
 				return tokenObj.save();
 			}
