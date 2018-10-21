@@ -7,16 +7,30 @@ import { User } from '../interfaces/user.interface';
 export default class NotificationController {
   private static notificationsQueue: Notification<any>[] = [];
 
+  /**
+   * Adds a notification to the notification stack.
+   * @param notification the notification to be added.
+   */
   public static addNotification(notification: Notification<any>): Bluebird<any> {
     this.notificationsQueue.push(notification);
     return Bluebird.resolve(notification);
   }
 
+  /**
+   * Adds multiple notifications into the notification stack.
+   * @param notifications Array of notification objects.
+   */
   public static addNotifications(notifications: Notification<any>[]): Bluebird<any> {
     this.notificationsQueue = notifications.concat(this.notificationsQueue);
     return Bluebird.resolve(notifications);
   }
 
+  /**
+   * Polls unread notifications and obtains all the reponses from the notification
+   * stack. Returns a Promise.
+   * @param email The email of the username whose notifications is redirected
+   * to.
+   */
   public static pollNotifications(email: string): Bluebird<any> {
     this.cleanNotifications();
     return new Bluebird((resolve, reject) => {
