@@ -112,7 +112,7 @@ export default class AuthController {
 			}).then((tokenThing:any) => {
 				let verificationDone: boolean = false;
 				if (tokenThing != null) {
-					const userDH = Crypto.createDiffieHellman(60);
+					const userDH = Crypto.createDiffieHellman(serverDH.getPrime());
 
 					userDH.setPrivateKey(tokenId, "hex");
 					userDH.setPublicKey(tokenThing.token, "hex");
