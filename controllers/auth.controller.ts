@@ -46,22 +46,14 @@ export default class AuthController {
 		let tokenPromise: Bluebird<any>;
 		// store public to database...
 		if (user.kind === "ELDER") {
-			tokenPromise = ElderToken.findOrCreate({
-				where: {
-					elderId: user.id,
-				},
-				defaults: {
-					token: publicKey,
-				}
+			tokenPromise = ElderToken.upsert({
+				elderId: user.id,
+				token: publicKey
 			})
 		} else if (user.kind === "CARER") {
-			tokenPromise = CarerToken.findOrCreate({
-				where: {
-					carerId: user.id
-				},
-				defaults: {
-					token: publicKey,
-				}
+			tokenPromise = CarerToken.upsert({
+				elderId: user.id,
+				token: publicKey
 			})
 		} else {
 			return Bluebird.reject("6001: Invalid account type;")
