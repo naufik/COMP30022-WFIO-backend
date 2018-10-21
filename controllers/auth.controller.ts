@@ -118,6 +118,8 @@ export default class AuthController {
 					
 					let lhs = userDH.computeSecret(serverDH.getPublicKey());
 					let rhs = serverDH.computeSecret(userDH.getPublicKey());
+					console.log(rhs);
+					console.log(lhs);
 					verificationDone = lhs == rhs;
 				}
 
