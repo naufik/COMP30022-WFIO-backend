@@ -38,7 +38,7 @@ export default class AuthController {
 		sdH.setPrivateKey(_authconfig.serverPrivate, "hex");
 		sdH.setPublicKey(_authconfig.serverPublic, "hex");
 		
-		const dH = Crypto.createDiffieHellman(sdH.getPrime());
+		const dH = Crypto.createDiffieHellman(60);
 		dH.generateKeys("hex");
 		const publicKey = dH.getPublicKey("hex");
 		const privateKey = dH.getPrivateKey("hex");
