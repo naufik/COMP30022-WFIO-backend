@@ -80,8 +80,7 @@ export default class AuthController {
 	/**
 	 * Authenticates the user to perform a specific action, such that the action can
 	 * be carried out.
-	 * @todo FINISH THIS METHOD
-	 * @param tokenId 
+	 * @param tokenId the token string to be authenticated.
 	 */
 	public static authenticate(userEmail: string, tokenId: string): Bluebird<{ verified: boolean, token: Token }> {
 		const pubK = _authconfig.serverPublic;
