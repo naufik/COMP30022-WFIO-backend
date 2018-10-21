@@ -38,13 +38,13 @@ UserRouter.post('/', (req: Request, res: Response) => {
             actionReceipt = RouterFunctions.login(actionRequest.params);
             break;
         case "user.genlink":
-            // actionReceipt = AuthController.authenticate(req.body.identity.email, req.body.identity.token).then((auth) => {
-                // if (auth.verified) {
-                    actionReceipt =  RouterFunctions.getLinkCode(req.body.identity.email);
-                // } else {
-                    // return Bluebird.reject("403: Forbidden Access");
-                // }
-            // });
+            actionReceipt = AuthController.authenticate(req.body.identity.email, req.body.identity.token).then((auth) => {
+                if (auth.verified) {
+                    return RouterFunctions.getLinkCode(req.body.identity.email);
+                } else {
+                    return Bluebird.reject("403: Forbidden Access");
+                }
+            });
             break;
         case "user.link":
             actionReceipt = RouterFunctions.linkElder(req.body.identity.email, actionRequest.params);
