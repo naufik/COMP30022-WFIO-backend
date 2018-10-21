@@ -90,19 +90,19 @@ export default class AuthController {
 		serverDH.setPrivateKey(prvK, "hex");
 		serverDH.setPublicKey(pubK, "hex");
 
-		return UserController.getUserByEmail(userEmail)
+		return UserController.getUserByEmail(userEmail, false)
 			.then((value) => {
 				if (value != null) {
 					if (value.accountType == "ELDER") {
 						return ElderToken.findOne({
 							where: {
-								elderId: value.user.id
+								elderId: value.id
 							}
 						});
 					} else if (value.accountType == "CARER") {
 						return CarerToken.findOne({
 							where: {
-								carerId: value.user.id
+								carerId: value.id
 							}
 						});
 					}
