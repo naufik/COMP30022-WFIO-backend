@@ -39,21 +39,29 @@ export default class AuthController {
 		sdH.setPublicKey(_authconfig.serverPublic, "hex");
 		
 		const dH = Crypto.createDiffieHellman(sdH.getPrime());
-		dH.generateKeys("hex");
+		dH.generateKeys("base64");
 		const publicKey = dH.getPublicKey("hex");
 		const privateKey = dH.getPrivateKey("hex");
 
 		let tokenPromise: Bluebird<any>;
 		// store public to database...
 		if (user.kind === "ELDER") {
-			tokenPromise = ElderToken.upsert({
-				elderId: user.id,
-				token: publicKey
+			tokenPromise = ElderToken.findOrCreate({
+				where: {
+					elderId: user.id,
+				},
+				defaults: {
+					token: publicKey,
+				}
 			})
 		} else if (user.kind === "CARER") {
-			tokenPromise = CarerToken.upsert({
-				elderId: user.id,
-				token: publicKey
+			tokenPromise = CarerToken.findOrCreate({
+				where: {
+					carerId: user.id
+				},
+				defaults: {
+					token: publicKey,
+				}
 			})
 		} else {
 			return Bluebird.reject("6001: Invalid account type;")
