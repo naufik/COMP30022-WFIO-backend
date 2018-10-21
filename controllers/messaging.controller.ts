@@ -20,7 +20,7 @@ export default class MessagingController {
   public static sendMessage(identity: string, params: any) {
     return UserController.getUserByEmail(identity).then((user) => {
       if (user == null) {
-        Bluebird.reject(new Error("null user"));
+        return Bluebird.reject(new Error("null user"));
       }
       return Connection.findOne({
         where: {
@@ -29,6 +29,9 @@ export default class MessagingController {
         }
       });
     }).then((connection: any) => {
+      if (connection == null) {
+        return Bluebird.reject(new Error("Elder not being connected to that carer"));
+      }
       let poly: any = null;
       if (params.location) {
         poly = { type: 'Point', 
