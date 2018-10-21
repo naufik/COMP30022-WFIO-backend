@@ -18,14 +18,14 @@ export default class MessagingController {
    * Refer to the interfaces document for more details.
    */
   public static sendMessage(identity: string, params: any) {
-    return UserController.getUserByEmail(identity).then((user) => {
+    return UserController.getUserByEmail(identity, false).then((user) => {
       if (user == null) {
         return Bluebird.reject(new Error("null user"));
       }
       return Connection.findOne({
         where: {
-          carerId: user.id,
-          elderId: params.recipient,
+          carerId: user.accountType === "ELDER" ? params.recipient : user.id,
+          elderId: user.accountType === "ELDER" ? user.id : params.recipient,
         }
       });
     }).then((connection: any) => {
