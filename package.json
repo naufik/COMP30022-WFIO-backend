@@ -30,7 +30,7 @@
     "node-rsa": "^1.0.1",
     "pg": "^7.4.3",
     "sequelize": "^4.38.0",
-    "socket.io": "^2.1.1",
+    "socket.io": "^2.4.0",
     "graceful-fs": "^4.1.11",
     "typescript": "^3.0.1"
   },
